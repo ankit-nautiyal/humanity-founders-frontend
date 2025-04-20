@@ -22,17 +22,17 @@ function SocialLoginSection() {
   ];
 
   return (
-    <div className="flex gap-2.5 justify-center items-center self-center mt-4">
+    <div className="flex gap-2 justify-center items-center w-full mt-2">
       {socialIcons.map((icon, index) => (
         <button
           key={index}
-          className="flex gap-2.5 items-center self-stretch p-2 my-auto w-11 h-11 bg-slate-100 rounded-[30px]"
+          className="flex gap-1 items-center justify-center p-1 w-9 h-9 bg-slate-100 rounded-full"
           aria-label={icon.alt}
         >
           <img
             src={icon.src}
             alt={icon.alt}
-            className="object-contain self-stretch my-auto w-7 aspect-square"
+            className="object-contain w-6 aspect-square"
           />
         </button>
       ))}
