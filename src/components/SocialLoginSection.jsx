@@ -26,7 +26,7 @@ function SocialLoginSection() {
       {socialIcons.map((icon, index) => (
         <button
           key={index}
-          className="flex gap-1 items-center justify-center p-1 w-9 h-9 bg-slate-100 rounded-full"
+          className="flex gap-1 items-center justify-center p-1 w-9 h-9 bg-slate-100 rounded-full cursor-pointer"
           aria-label={icon.alt}
         >
           <img

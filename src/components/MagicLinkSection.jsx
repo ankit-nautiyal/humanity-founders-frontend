@@ -82,7 +82,7 @@ function MagicLinkSection() {
         <div className="mt-2 w-full">
           <button 
             type="submit"
-            className="w-full text-base font-medium text-center text-white rounded-lg h-[40px] overflow-hidden disabled:opacity-70"
+            className="w-full text-base font-medium text-center text-white rounded-lg h-[40px] overflow-hidden disabled:opacity-70 cursor-pointer"
             style={{
               background: 'linear-gradient(90deg, rgba(48, 90, 255, 0.8) 0%, #B5D2FF 100%)',
               borderRadius: '8px'

@@ -36,8 +36,8 @@ function LoginPage() {
 
           <section className="flex flex-col px-12 py-5 mt-4 bg-white rounded-2xl max-md:px-5 max-md:mt-3 max-md:max-w-full items-center justify-center shadow-[0px_10px_30px_rgba(0,0,0,0.08)]">
             <div className="max-w-[400px] w-full max-md:w-full">
-              <button className="w-full text-base font-medium text-center text-blue-600 rounded-lg h-[40px]">
-                <div className="flex items-center justify-center px-8 py-2 rounded-lg border border-blue-600 border-solid max-md:px-5">
+              <button className="w-full text-base font-medium text-center text-blue-600 rounded-lg h-[40px] cursor-pointer">
+                <div className="flex items-center justify-center px-8 py-2 rounded-lg border border-blue-600 border-solid max-md:px-5 cursor-pointer">
                   Continue with Google/Microsoft
                 </div>
               </button>

@@ -1,9 +1,9 @@
 import { AnimatePresence } from 'framer-motion';
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import PlatformSetup from './pages/PlatformSetup';
-import RegistrationPage from './pages/RegistrationPage';
+import LoginPage from './pages/LoginPage.jsx';
+import PlatformSetup from './pages/PlatformSetup.jsx';
+import RegistrationPage from './pages/RegistrationPage.jsx';
 
 // AnimatedRoutes wrapper to provide location to AnimatePresence
 const AnimatedRoutes = () => {

@@ -363,7 +363,7 @@ function BusinessProfileForm() {
           <div className="flex justify-center mt-10 w-full">
             <button 
               type="submit"
-              className="w-[350px] h-[50px] rounded-[8px] px-[35px] py-[10px] gap-[10px] text-white"
+              className="w-[350px] h-[50px] rounded-[8px] px-[35px] py-[10px] gap-[10px] text-white cursor-pointer"
               style={{
                 background: 'linear-gradient(90deg, rgba(48, 90, 255, 0.8) 0%, #B5D2FF 100%)'
               }}
