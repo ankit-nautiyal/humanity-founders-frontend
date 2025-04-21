@@ -1,11 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import api from "../utils/api";
 import Divider from "./Divider";
 
 function MagicLinkSection() {
   const [magicLinkEmail, setMagicLinkEmail] = useState("");
   const [magicLinkEmailError, setMagicLinkEmailError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateMagicLinkEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -20,22 +22,38 @@ function MagicLinkSection() {
     return true;
   };
 
-  const handleSendMagicLink = (e) => {
+  const handleSendMagicLink = async (e) => {
     e.preventDefault();
     
     const isEmailValid = validateMagicLinkEmail(magicLinkEmail);
     
     if (isEmailValid) {
-      toast.info("Magic link sent! Please check your email", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      setIsSubmitting(true);
       
-      // Here you would typically send the magic link email
+      try {
+        // Call the mock API for magic link - fixed to match the API interface
+        await api.auth.sendMagicLink(magicLinkEmail);
+        
+        toast.info("Magic link sent! Please check your email", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        
+        // Clear email input after successful request
+        setMagicLinkEmail("");
+      } catch (error) {
+        // Show error message
+        toast.error(error.data?.error || "Failed to send magic link. Please try again.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -64,13 +82,14 @@ function MagicLinkSection() {
         <div className="mt-2 w-full">
           <button 
             type="submit"
-            className="w-full text-base font-medium text-center text-white rounded-lg h-[40px] overflow-hidden"
+            className="w-full text-base font-medium text-center text-white rounded-lg h-[40px] overflow-hidden disabled:opacity-70"
             style={{
               background: 'linear-gradient(90deg, rgba(48, 90, 255, 0.8) 0%, #B5D2FF 100%)',
               borderRadius: '8px'
             }}
+            disabled={isSubmitting}
           >
-            Send Magic Link
+            {isSubmitting ? "Sending..." : "Send Magic Link"}
           </button>
 
           <Divider />

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import api from "../utils/api";
 import Divider from "./Divider";
 import SocialLoginSection from "./SocialLoginSection";
 
@@ -11,6 +12,7 @@ function CredentialsSection({ onSuccessfulLogin }) {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -37,29 +39,46 @@ function CredentialsSection({ onSuccessfulLogin }) {
     return true;
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password);
     
     if (isEmailValid && isPasswordValid) {
-      // If onSuccessfulLogin prop exists, use it for redirection
-      if (onSuccessfulLogin) {
-        onSuccessfulLogin();
-      } else {
-        // Fallback to regular toast if no redirect function provided
-        toast.success("Logged in successfully!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-      }
+      setIsSubmitting(true);
       
-      // Here you would typically handle the actual login API call
+      try {
+        // Call the mock API for login - fixed to match the API interface
+        const response = await api.auth.login(email, password);
+        
+        // Store token and user in localStorage (in a real app, use a more secure method)
+        localStorage.setItem('authToken', response.token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        
+        // If onSuccessfulLogin prop exists, use it for redirection
+        if (onSuccessfulLogin) {
+          onSuccessfulLogin();
+        } else {
+          // Fallback to regular toast if no redirect function provided
+          toast.success("Logged in successfully!", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+        }
+      } catch (error) {
+        // Show error message
+        toast.error(error.data?.error || "Login failed. Please check your credentials.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -126,13 +145,14 @@ function CredentialsSection({ onSuccessfulLogin }) {
         <div className="mt-3 w-full">
           <button 
             type="submit" 
-            className="w-full text-base font-medium text-center text-white rounded-lg h-[40px] overflow-hidden"
+            className="w-full text-base font-medium text-center text-white rounded-lg h-[40px] overflow-hidden disabled:opacity-70"
             style={{
               background: 'linear-gradient(90deg, rgba(48, 90, 255, 0.8) 0%, #B5D2FF 100%)',
               borderRadius: '8px'
             }}
+            disabled={isSubmitting}
           >
-            Login
+            {isSubmitting ? "Logging in..." : "Login"}
           </button>
 
           <div className="flex flex-col justify-center mt-2 w-full">

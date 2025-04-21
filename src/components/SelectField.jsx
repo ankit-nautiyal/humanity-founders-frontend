@@ -1,8 +1,17 @@
 import React, { useState } from "react";
 
-function SelectField({ label, placeholder, className = "", options = [] }) {
+function SelectField({ 
+  label, 
+  placeholder, 
+  className = "", 
+  options = [], 
+  value = "", 
+  onChange = null, 
+  error = "", 
+  isRequired = false 
+}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState(value);
 
   // Set default options if none provided
   const fieldOptions = options.length > 0 ? options : getDefaultOptions(label);
@@ -92,14 +101,21 @@ function SelectField({ label, placeholder, className = "", options = [] }) {
   const handleSelect = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
+    
+    // Call onChange if provided
+    if (onChange) {
+      onChange(option);
+    }
   };
 
   return (
     <div className={`flex flex-col rounded-none ${className}`}>
-      <label className="self-start text-base text-zinc-800">{label}</label>
+      <label className="self-start text-base text-zinc-800">
+        {label} {isRequired && <span className="text-red-500">*</span>}
+      </label>
       <div className="relative w-full">
         <div 
-          className="flex gap-5 justify-between px-4 py-3.5 mt-2 text-sm bg-white rounded-lg border border-solid border-stone-300 cursor-pointer w-full"
+          className={`flex gap-5 justify-between px-4 py-3.5 mt-2 text-sm bg-white rounded-lg border border-solid ${error ? "border-red-500" : "border-stone-300"} cursor-pointer w-full`}
           onClick={toggleDropdown}
         >
           <div className={`my-auto ${selectedOption ? 'text-zinc-800' : 'text-zinc-400'}`}>
@@ -131,6 +147,7 @@ function SelectField({ label, placeholder, className = "", options = [] }) {
           </div>
         )}
       </div>
+      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
     </div>
   );
 }

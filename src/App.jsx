@@ -1,17 +1,29 @@
+import { AnimatePresence } from 'framer-motion';
 import React from 'react';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import PlatformSetup from './pages/PlatformSetup';
 import RegistrationPage from './pages/RegistrationPage';
 
-function App() {
+// AnimatedRoutes wrapper to provide location to AnimatePresence
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  
   return (
-    <Router>
-      <Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/platform-setup" element={<PlatformSetup />} />
       </Routes>
+    </AnimatePresence>
+  );
+};
+
+function App() {
+  return (
+    <Router>
+      <AnimatedRoutes />
     </Router>
   );
 }
