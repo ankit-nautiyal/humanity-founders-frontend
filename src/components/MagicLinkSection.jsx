@@ -65,10 +65,12 @@ function MagicLinkSection() {
           <button 
             type="submit"
             className="w-full text-base font-medium text-center text-white rounded-lg h-[40px] overflow-hidden"
+            style={{
+              background: 'linear-gradient(90deg, rgba(48, 90, 255, 0.8) 0%, #B5D2FF 100%)',
+              borderRadius: '8px'
+            }}
           >
-            <div className="flex items-center justify-center py-2 bg-indigo-500 h-full w-full border border-indigo-600 border-solid">
-              Send Magic Link
-            </div>
+            Send Magic Link
           </button>
 
           <Divider />

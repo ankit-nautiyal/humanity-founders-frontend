@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Divider from "./Divider";
 import SocialLoginSection from "./SocialLoginSection";
 
-function CredentialsSection() {
+function CredentialsSection({ onSuccessfulLogin }) {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,14 +44,20 @@ function CredentialsSection() {
     const isPasswordValid = validatePassword(password);
     
     if (isEmailValid && isPasswordValid) {
-      toast.success("Logged in successfully!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      // If onSuccessfulLogin prop exists, use it for redirection
+      if (onSuccessfulLogin) {
+        onSuccessfulLogin();
+      } else {
+        // Fallback to regular toast if no redirect function provided
+        toast.success("Logged in successfully!", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      }
       
       // Here you would typically handle the actual login API call
     }
@@ -120,11 +126,13 @@ function CredentialsSection() {
         <div className="mt-3 w-full">
           <button 
             type="submit" 
-            className="w-full text-base font-medium text-center text-white bg-indigo-500 rounded-lg h-[40px] overflow-hidden"
+            className="w-full text-base font-medium text-center text-white rounded-lg h-[40px] overflow-hidden"
+            style={{
+              background: 'linear-gradient(90deg, rgba(48, 90, 255, 0.8) 0%, #B5D2FF 100%)',
+              borderRadius: '8px'
+            }}
           >
-            <div className="flex items-center justify-center py-2 w-full h-full bg-indigo-500 border border-indigo-600 border-solid">
-              Login
-            </div>
+            Login
           </button>
 
           <div className="flex flex-col justify-center mt-2 w-full">
