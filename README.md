@@ -33,6 +33,18 @@ ReferralHub is a platform designed to streamline the process of managing busines
 - **Animations**: Framer Motion
 - **Notifications**: React Toastify
 
+## Project Screenshots
+![image](https://github.com/user-attachments/assets/a3dbd1c5-1bf2-4fdb-826d-0791961945cb)
+![image](https://github.com/user-attachments/assets/240f5250-9135-44a1-8324-fc95b5f94c0e)
+![image](https://github.com/user-attachments/assets/cbe02561-6818-445b-887e-0b5ca08b17c7)
+![image](https://github.com/user-attachments/assets/eb22a5b6-cbce-4489-8326-daf11e61d488)
+![image](https://github.com/user-attachments/assets/dd58f16b-57bd-40a0-a8fa-8dcb51e06f66)
+![image](https://github.com/user-attachments/assets/8350bee1-122d-4fba-95d8-acdd9254dc7e)
+![image](https://github.com/user-attachments/assets/3115c119-c2a7-4510-ae30-33c84f9cfdb2)
+![image](https://github.com/user-attachments/assets/e11db421-d0ce-4e31-8db2-1ad6a17814e8)
+![image](https://github.com/user-attachments/assets/b7db791a-8abb-4dd6-afae-94b50c05e1f5)
+
+
 ## Getting Started
 
 ### Prerequisites
