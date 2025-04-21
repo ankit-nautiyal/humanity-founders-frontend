@@ -49,7 +49,7 @@ function LoginPage() {
 
             <p className="self-center mt-4 text-base text-neutral-400 max-md:mt-2">
               Don't have an account?{" "}
-              <Link to="/register" className="text-[rgba(48,90,255,1)] hover:underline transition-all">
+              <Link to="/" className="text-[rgba(48,90,255,1)] hover:underline transition-all">
                 Register now
               </Link>
             </p>
