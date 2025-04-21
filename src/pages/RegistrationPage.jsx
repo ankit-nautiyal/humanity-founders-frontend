@@ -102,7 +102,7 @@ function RegistrationPage() {
         
         // Redirect to login page after a delay
         setTimeout(() => {
-          navigate('/');
+          navigate('/login');
         }, 2000);
       } catch (error) {
         // Show error message
