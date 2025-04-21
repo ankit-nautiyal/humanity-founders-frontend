@@ -255,7 +255,7 @@ function RegistrationPage() {
 
               <p className="self-center text-base text-center text-neutral-400">
                 Already have an account?{" "}
-                <Link to="/" className="text-[rgba(48,90,255,1)] hover:underline transition-all">
+                <Link to="/login" className="text-[rgba(48,90,255,1)] hover:underline transition-all">
                   Login
                 </Link>
               </p>
