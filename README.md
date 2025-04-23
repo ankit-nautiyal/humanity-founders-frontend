@@ -1,6 +1,6 @@
 # ReferralHub
 
-A modern web application for business referral management built with React and Tailwind CSS.
+A modern web application for business referral management built with React.js and Tailwind CSS.
 
 ## Overview
 
