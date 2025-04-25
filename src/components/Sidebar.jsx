@@ -35,8 +35,8 @@ function Sidebar() {
     {
       name: "Promoters",
       icon: "https://cdn.builder.io/api/v1/image/assets/0f6176394f8a4b40b34a374327492484/aae8f37a27a095783ff1f3e8ec2ebb4ebaf52ff5?placeholderIfAbsent=true",
-      path: "#",
-      active: false,
+      path: "/promoters",
+      active: currentPath === "/promoters",
     },
     {
       name: "Leads",

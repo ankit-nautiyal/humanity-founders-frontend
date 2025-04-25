@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import PlatformSetup from './pages/PlatformSetup.jsx';
 import RegistrationPage from './pages/RegistrationPage.jsx';
+import Promoters from './pages/Promoters.jsx';
 
 // AnimatedRoutes wrapper to provide location to AnimatePresence
 const AnimatedRoutes = () => {
@@ -21,6 +22,7 @@ const AnimatedRoutes = () => {
         <Route path="/ai-agent" element={<AI_Agent />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/campaign" element={<Campaign />} />
+        <Route path="/promoters" element={<Promoters />} />
       </Routes>
     </AnimatePresence>
   );

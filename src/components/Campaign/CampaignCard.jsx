@@ -15,7 +15,7 @@ function CampaignCard({ campaign }) {
         </div>
         <span
           style={{ background: isActive ? "#4184E91A" : "#F3F3F3" }}
-          className={`gap-2.5 self-stretch px-2.5 py-1 text-sm leading-none whitespace-nowrap rounded-lg ${
+          className={`inline-block px-2 py-0.5 text-xs leading-tight whitespace-nowrap rounded-lg ${
             isActive
               ? "text-blue-500"
               : "text-neutral-400"
