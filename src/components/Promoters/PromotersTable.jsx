@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import eyeIcon from "../../assets/eye-icon.png";
 import messageIcon from "../../assets/message-up.png";
 import PromoterStatusBadge from "./PromoterStatusBadge";
 
@@ -154,6 +155,11 @@ function PromotersTable() {
                   src="https://cdn.builder.io/api/v1/image/assets/0f6176394f8a4b40b34a374327492484/15351fa4142869ab40f38e92908a2c28efa8aade?placeholderIfAbsent=true"
                   className="object-contain w-5 h-5 cursor-pointer"
                   alt="More options"
+                />
+                <img
+                  src={eyeIcon}
+                  className="object-contain w-5 h-5 cursor-pointer"
+                  alt="View promoter details"
                 />
                 <img
                   src={messageIcon}

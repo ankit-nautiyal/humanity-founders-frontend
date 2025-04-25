@@ -20,7 +20,7 @@ function ProfileHeader() {
       case "/promoters":
         return "Manage and monitor your promoter referral activities";
       case "/leads":
-        return "Leads";
+        return "Manage and monitor your leads";
       case "/payouts":
         return "Payouts";
       case "/settings":

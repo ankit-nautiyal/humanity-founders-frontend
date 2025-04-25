@@ -41,8 +41,8 @@ function Sidebar() {
     {
       name: "Leads",
       icon: "https://cdn.builder.io/api/v1/image/assets/0f6176394f8a4b40b34a374327492484/74d29f8eed60254efa5b70a810b3d72739c7c114?placeholderIfAbsent=true",
-      path: "#",
-      active: false,
+      path: "/leads",
+      active: currentPath === "/leads",
     },
     {
       name: "Payouts",

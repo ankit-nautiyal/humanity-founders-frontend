@@ -4,10 +4,11 @@ import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-route
 import AI_Agent from './pages/AI_Agent.jsx';
 import Campaign from './pages/Campaign.jsx';
 import Dashboard from './pages/Dashboard.jsx';
+import Leads from './pages/Leads.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import PlatformSetup from './pages/PlatformSetup.jsx';
-import RegistrationPage from './pages/RegistrationPage.jsx';
 import Promoters from './pages/Promoters.jsx';
+import RegistrationPage from './pages/RegistrationPage.jsx';
 
 // AnimatedRoutes wrapper to provide location to AnimatePresence
 const AnimatedRoutes = () => {
@@ -23,6 +24,7 @@ const AnimatedRoutes = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/campaign" element={<Campaign />} />
         <Route path="/promoters" element={<Promoters />} />
+        <Route path="/leads" element={<Leads />} />
       </Routes>
     </AnimatePresence>
   );
