@@ -47,8 +47,8 @@ function Sidebar() {
     {
       name: "Payouts",
       icon: "https://cdn.builder.io/api/v1/image/assets/0f6176394f8a4b40b34a374327492484/1e5a46ce258f5e0b49779edc2d69539f471b4bf7?placeholderIfAbsent=true",
-      path: "#",
-      active: false,
+      path: "/payouts",
+      active: currentPath === "/payouts",
     },
   ];
 

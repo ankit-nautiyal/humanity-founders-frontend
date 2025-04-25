@@ -22,7 +22,7 @@ function ProfileHeader() {
       case "/leads":
         return "Manage and monitor your leads";
       case "/payouts":
-        return "Payouts";
+        return "Manage and monitor your payouts";
       case "/settings":
         return "Settings";
       case "/help":

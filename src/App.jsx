@@ -6,6 +6,7 @@ import Campaign from './pages/Campaign.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Leads from './pages/Leads.jsx';
 import LoginPage from './pages/LoginPage.jsx';
+import Payouts from './pages/Payouts.jsx';
 import PlatformSetup from './pages/PlatformSetup.jsx';
 import Promoters from './pages/Promoters.jsx';
 import RegistrationPage from './pages/RegistrationPage.jsx';
@@ -25,6 +26,7 @@ const AnimatedRoutes = () => {
         <Route path="/campaign" element={<Campaign />} />
         <Route path="/promoters" element={<Promoters />} />
         <Route path="/leads" element={<Leads />} />
+        <Route path="/payouts" element={<Payouts />} />
       </Routes>
     </AnimatePresence>
   );
