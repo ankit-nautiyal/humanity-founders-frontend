@@ -56,7 +56,8 @@ function Sidebar() {
     {
       name: "Settings",
       icon: "https://cdn.builder.io/api/v1/image/assets/0f6176394f8a4b40b34a374327492484/a9cca7237cba8153e14d0b1ec5751f68ff20cf49?placeholderIfAbsent=true",
-      path: "#",
+      path: "/settings",
+      active: currentPath === "/settings",
     },
     {
       name: "Help",
@@ -103,7 +104,9 @@ function Sidebar() {
           {bottomMenuItems.map((item, index) => (
             <li
               key={index}
-              className="flex gap-4 items-center py-3 pl-5 mt-1.5 w-full rounded-xl cursor-pointer hover:bg-blue-50"
+              className={`flex gap-4 items-center py-3 pl-5 mt-1.5 w-full rounded-xl cursor-pointer hover:bg-blue-50 ${
+                item.active ? "text-blue-600 bg-blue-50" : ""
+              }`}
               onClick={() => handleNavigation(item.path)}
             >
               <img

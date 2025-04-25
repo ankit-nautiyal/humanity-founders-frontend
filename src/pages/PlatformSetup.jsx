@@ -10,15 +10,23 @@ import Sidebar from "../components/Sidebar";
 
 function PlatformSetup() {
   useEffect(() => {
-    // Show login success toast when component mounts
-    toast.success("Login successful!", {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
+    // Check if login toast has already been shown
+    const hasShownLoginToast = localStorage.getItem('loginToastShown');
+    
+    // Only show the toast if it hasn't been shown yet
+    if (!hasShownLoginToast) {
+      toast.success("Login successful!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      
+      // Set flag in localStorage to prevent showing it again
+      localStorage.setItem('loginToastShown', 'true');
+    }
   }, []);
 
   return (

@@ -10,6 +10,7 @@ import Payouts from './pages/Payouts.jsx';
 import PlatformSetup from './pages/PlatformSetup.jsx';
 import Promoters from './pages/Promoters.jsx';
 import RegistrationPage from './pages/RegistrationPage.jsx';
+import Settings from './pages/Settings.jsx';
 
 // AnimatedRoutes wrapper to provide location to AnimatePresence
 const AnimatedRoutes = () => {
@@ -27,6 +28,7 @@ const AnimatedRoutes = () => {
         <Route path="/promoters" element={<Promoters />} />
         <Route path="/leads" element={<Leads />} />
         <Route path="/payouts" element={<Payouts />} />
+        <Route path="/settings" element={<Settings />} />
       </Routes>
     </AnimatePresence>
   );
