@@ -23,8 +23,8 @@ function Sidebar() {
     {
       name: "Dashboard",
       icon: "https://cdn.builder.io/api/v1/image/assets/0f6176394f8a4b40b34a374327492484/fd09e198f12c57e2d03e44eddc63e84b98cc3188?placeholderIfAbsent=true",
-      path: "#",
-      active: false,
+      path: "/dashboard",
+      active: currentPath === "/dashboard",
     },
     {
       name: "Campaign",
