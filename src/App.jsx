@@ -4,6 +4,7 @@ import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-route
 import LoginPage from './pages/LoginPage.jsx';
 import PlatformSetup from './pages/PlatformSetup.jsx';
 import RegistrationPage from './pages/RegistrationPage.jsx';
+import AI_Agent from './pages/AI_Agent.jsx';
 
 // AnimatedRoutes wrapper to provide location to AnimatePresence
 const AnimatedRoutes = () => {
@@ -15,6 +16,7 @@ const AnimatedRoutes = () => {
         <Route path="/" element={<RegistrationPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/platform-setup" element={<PlatformSetup />} />
+        <Route path="/ai-agent" element={<AI_Agent />} />
       </Routes>
     </AnimatePresence>
   );

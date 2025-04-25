@@ -26,8 +26,8 @@ function PlatformSetup() {
       <div className="flex flex-col min-h-screen bg-slate-100">
         <ToastContainer />
         <main className="flex flex-1 bg-slate-100">
-          <div className="flex w-full gap-5 p-4 max-md:flex-col">
-            <aside className="w-[17%] max-md:w-full">
+          <div className="flex w-full gap-5 p-4 max-md:flex-col min-h-screen">
+            <aside className="w-[17%] max-md:w-full h-full">
               <Sidebar />
             </aside>
             <section className="flex flex-col w-[83%] max-md:w-full">

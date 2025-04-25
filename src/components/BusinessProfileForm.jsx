@@ -199,7 +199,7 @@ function BusinessProfileForm() {
               <button 
                 type="button"
                 onClick={handleLogoClick} 
-                className="gap-2.5 self-stretch p-2.5 my-auto bg-white rounded-lg border border-solid border-stone-300 cursor-pointer hover:bg-gray-50"
+                className="gap-2.5 self-stretch p-2.5 my-auto bg-white rounded-lg border border-solid border-stone-300 cursor-pointer transition-opacity duration-200 hover:opacity-70"
               >
                 Choose Image
               </button>
@@ -363,7 +363,7 @@ function BusinessProfileForm() {
           <div className="flex justify-center mt-10 w-full">
             <button 
               type="submit"
-              className="w-[350px] h-[50px] rounded-[8px] px-[35px] py-[10px] gap-[10px] text-white cursor-pointer"
+              className="w-[350px] h-[50px] rounded-[8px] px-[35px] py-[10px] gap-[10px] text-white cursor-pointer transition-opacity duration-200 hover:opacity-70"
               style={{
                 background: 'linear-gradient(90deg, rgba(48, 90, 255, 0.8) 0%, #B5D2FF 100%)'
               }}
