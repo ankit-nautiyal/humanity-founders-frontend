@@ -2,6 +2,7 @@ import { AnimatePresence } from 'framer-motion';
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom';
 import AI_Agent from './pages/AI_Agent.jsx';
+import Campaign from './pages/Campaign.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import PlatformSetup from './pages/PlatformSetup.jsx';
@@ -19,6 +20,7 @@ const AnimatedRoutes = () => {
         <Route path="/platform-setup" element={<PlatformSetup />} />
         <Route path="/ai-agent" element={<AI_Agent />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/campaign" element={<Campaign />} />
       </Routes>
     </AnimatePresence>
   );

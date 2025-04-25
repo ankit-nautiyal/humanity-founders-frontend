@@ -29,8 +29,8 @@ function Sidebar() {
     {
       name: "Campaign",
       icon: "https://cdn.builder.io/api/v1/image/assets/0f6176394f8a4b40b34a374327492484/4de6e5109238309216bddfc95ef085a2ded39479?placeholderIfAbsent=true",
-      path: "#",
-      active: false,
+      path: "/campaign",
+      active: currentPath === "/campaign",
     },
     {
       name: "Promoters",
