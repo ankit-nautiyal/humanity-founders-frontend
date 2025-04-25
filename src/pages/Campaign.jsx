@@ -10,29 +10,26 @@ import Sidebar from "../components/Sidebar";
 function Campaign() {
   const campaigns = [
     {
-      title: "Summer Referral Program",
-      dateRange: "5/31/2024 - 8/30/2024",
+      title: "Referrals for email signups",
+      description: "This campaign will enable your promoters to share their referral links with others to sign up for your email marketing list, growing your subscriber base. Promoters earn rewards when someone they refer signs up.",
+      reward: 20,
       isActive: true,
-      metrics: {
-        referrals: 245,
-        conversion: "32%",
-        roi: "287%",
-      },
-      recommendation:
-        "Increase reward by 10% to boost conversion rates during peak season",
+      lastUpdated: "3h ago"
     },
     {
-      title: "Early Bird Special",
-      dateRange: "8/20/2024 - 9/19/2024",
+      title: "Product purchases",
+      description: "Promoters earn a commission for every purchase made through their referral link. This campaign is perfect for encouraging product sales through word-of-mouth marketing.",
+      reward: 15,
       isActive: false,
-      metrics: {
-        referrals: 300,
-        conversion: "40%",
-        roi: "320%",
-      },
-      recommendation:
-        "Extend your campaign! Strong engagement suggests higher conversions with more time.",
+      lastUpdated: "2d ago"
     },
+    {
+      title: "Community outreach",
+      description: "Focused on building your community presence. Promoters get rewards when new users join your community platforms through their referral.",
+      reward: 25,
+      isActive: true,
+      lastUpdated: "1w ago"
+    }
   ];
 
   return (
@@ -50,18 +47,21 @@ function Campaign() {
                 
                 <CampaignToggleButtons />
                 
-                <div className="bg-white rounded-xl shadow-sm">
-                  <div className="p-6">
-                    <CampaignHeader />
-                    <CampaignStats campaignCount={2} activeCount={1} />
-                    
-                    <div className="mt-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        {campaigns.map((campaign, index) => (
-                          <CampaignCard key={index} campaign={campaign} />
-                        ))}
-                      </div>
-                    </div>
+                <div className="mt-4 bg-white p-6 max-sm:p-4 rounded-xl shadow-sm">
+                  <CampaignHeader />
+                  <CampaignStats />
+                  
+                  <div className="mt-6 grid gap-6 max-md:grid-cols-1">
+                    {campaigns.map((campaign, index) => (
+                      <CampaignCard
+                        key={index}
+                        title={campaign.title}
+                        description={campaign.description}
+                        reward={campaign.reward}
+                        isActive={campaign.isActive}
+                        lastUpdated={campaign.lastUpdated}
+                      />
+                    ))}
                   </div>
                 </div>
               </div>

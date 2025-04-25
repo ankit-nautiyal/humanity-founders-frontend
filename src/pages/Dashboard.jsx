@@ -94,9 +94,9 @@ function Dashboard() {
                 <ProfileHeader />
                 <hr className="mt-4 h-px border border-solid border-neutral-200 max-md:max-w-full" />
                 
-                <div className="mt-6 space-y-4">
+                <div className="mt-6 space-y-4 pb-6">
                   {/* Metrics Cards Section */}
-                  <div className="grid grid-cols-4 gap-4">
+                  <div className="grid grid-cols-4 gap-4 max-xl:grid-cols-2 max-sm:grid-cols-1">
                     {metricsData.map((metric, index) => (
                       <div key={index} className="p-5 bg-white rounded-xl shadow-sm">
                         <MetricsCard {...metric} />
@@ -105,15 +105,15 @@ function Dashboard() {
                   </div>
                   
                   {/* Rate Cards Section */}
-                  <div className="grid grid-cols-4 gap-4">
+                  <div className="grid grid-cols-4 gap-4 max-xl:grid-cols-2 max-sm:grid-cols-1">
                     {rateCardsData.map((card, index) => (
                       <RateCard key={index} {...card} />
                     ))}
                   </div>
                   
                   {/* Chart and Conversion Rate Section */}
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="col-span-2">
+                  <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-1">
+                    <div className="col-span-2 max-lg:col-span-1">
                       <PerformanceChart />
                     </div>
                     <div className="col-span-1">
@@ -122,13 +122,17 @@ function Dashboard() {
                   </div>
                   
                   {/* Referral Funnel and Channel Performance row */}
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-4 max-lg:grid-cols-1">
                     <ReferralFunnel />
                     <ChannelPerformanceCard />
                   </div>
                   
-                  {/* Leaderboard Table */}
-                  <LeaderboardTable />
+                  {/* Leaderboard Table - Responsive container for horizontal scroll on small screens */}
+                  <div className="overflow-x-auto">
+                    <div className="min-w-[800px]">
+                      <LeaderboardTable />
+                    </div>
+                  </div>
                   
                   {/* Activities Section */}
                   <ActivitiesSection />

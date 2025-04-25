@@ -31,7 +31,7 @@ function MagicLinkSection() {
       setIsSubmitting(true);
       
       try {
-        // Call the mock API for magic link - fixed to match the API interface
+        // Call the actual API for magic link
         await api.auth.sendMagicLink(magicLinkEmail);
         
         toast.info("Magic link sent! Please check your email", {
@@ -46,8 +46,9 @@ function MagicLinkSection() {
         // Clear email input after successful request
         setMagicLinkEmail("");
       } catch (error) {
-        // Show error message
-        toast.error(error.data?.error || "Failed to send magic link. Please try again.", {
+        // Show error message from API
+        const errorMessage = error.data?.error || "Failed to send magic link. Please try again.";
+        toast.error(errorMessage, {
           position: "top-right",
           autoClose: 3000,
         });

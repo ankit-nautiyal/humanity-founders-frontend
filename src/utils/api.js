@@ -1,173 +1,161 @@
-// API Base URL - would be replaced with actual API endpoint in production
-const API_BASE_URL = 'https://api.referralhub-mock.com/v1';
+import axios from 'axios';
 
-// Simulated network delay to mimic real API behavior
-const SIMULATED_DELAY_MS = 800;
+// API Base URL - actual API endpoint
+const API_BASE_URL = 'http://34.10.166.233';
 
-/**
- * Simulates an API request with mock responses
- * @param {string} endpoint - API endpoint
- * @param {object} options - Request options
- * @returns {Promise} - Promise with mock response
- */
-const simulateApiRequest = async (endpoint, options = {}) => {
-  console.log(`API Request to ${endpoint}`, options);
-  
-  // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, SIMULATED_DELAY_MS));
-  
-  // Random success rate to simulate occasional failures
-  const isSuccess = Math.random() > 0.2;
-  
-  if (!isSuccess) {
-    // Simulate random API errors
-    const errors = [
-      { status: 400, message: "Invalid request data" },
-      { status: 401, message: "Unauthorized access" },
-      { status: 403, message: "Access forbidden" },
-      { status: 500, message: "Internal server error" }
-    ];
-    const error = errors[Math.floor(Math.random() * errors.length)];
-    throw { status: error.status, data: { error: error.message } };
+// Create axios instance with common configuration
+const axiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Add request interceptor to include auth token in requests
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  
-  // Handle different endpoints with appropriate mock responses
-  switch (endpoint) {
-    case '/auth/register':
-      return {
-        status: 201,
-        data: {
-          success: true,
-          message: "User registered successfully",
-          user: {
-            id: `user_${Math.floor(Math.random() * 10000)}`,
-            email: options.body.email,
-            name: options.body.name || "New User",
-            created_at: new Date().toISOString()
-          },
-          token: "mock_jwt_token_" + Math.random().toString(36).substring(2, 15)
-        }
-      };
+);
+
+// Add response interceptor to handle token refresh
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const originalRequest = error.config;
     
-    case '/auth/login':
-      return {
-        status: 200,
-        data: {
-          success: true,
-          message: "Login successful",
-          user: {
-            id: `user_${Math.floor(Math.random() * 10000)}`,
-            email: options.body.email,
-            name: "Kadin Stanton",
-            created_at: new Date().toISOString()
-          },
-          token: "mock_jwt_token_" + Math.random().toString(36).substring(2, 15)
-        }
-      };
+    // If the error is 401 and we haven't retried the request yet
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
       
-    case '/business/profile':
-      return {
-        status: 200,
-        data: {
-          success: true,
-          message: "Business profile created successfully",
-          business: {
-            id: `business_${Math.floor(Math.random() * 10000)}`,
-            name: options.body.businessName,
-            email: options.body.businessEmail,
-            phone: options.body.businessPhone,
-            description: options.body.businessDescription,
-            industry: options.body.industry,
-            city: options.body.city,
-            state: options.body.state,
-            created_at: new Date().toISOString()
-          }
+      try {
+        // Attempt to refresh the token
+        const refreshToken = localStorage.getItem('refreshToken');
+        if (refreshToken) {
+          const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
+            refreshToken,
+          });
+          
+          const { token } = response.data;
+          localStorage.setItem('authToken', token);
+          
+          // Update header and retry original request
+          originalRequest.headers['Authorization'] = `Bearer ${token}`;
+          return axiosInstance(originalRequest);
         }
-      };
-      
-    default:
-      return {
-        status: 404,
-        data: { 
-          success: false,
-          error: "Endpoint not found" 
-        }
-      };
+      } catch (refreshError) {
+        // If refresh token fails, log out the user
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+        
+        // Redirect to login (optional, depends on your app structure)
+        window.location.href = '/login';
+      }
+    }
+    
+    return Promise.reject(error);
   }
-};
-
-// Mock API delay
-const mockDelay = (ms = 1000) => new Promise(resolve => setTimeout(resolve, ms));
-
-// Mock user data
-const mockUser = {
-  id: 'usr_123456789',
-  firstName: 'Jane',
-  lastName: 'Doe',
-  email: 'jane.doe@example.com',
-  profileImage: 'https://randomuser.me/api/portraits/women/17.jpg',
-  isEmailVerified: true,
-  businessProfile: {
-    companyName: 'Acme Inc.',
-    industry: 'Technology',
-    companySize: '50-100',
-    city: 'San Francisco',
-    state: 'CA',
-    country: 'United States'
-  }
-};
+);
 
 // API functions
 const api = {
   auth: {
+    // Register new user
+    register: async (userData) => {
+      try {
+        const response = await axiosInstance.post('/auth/register', userData);
+        
+        if (response.data.token) {
+          localStorage.setItem('authToken', response.data.token);
+          
+          if (response.data.refreshToken) {
+            localStorage.setItem('refreshToken', response.data.refreshToken);
+          }
+        }
+        
+        return response.data;
+      } catch (error) {
+        throw handleApiError(error);
+      }
+    },
+    
     // Login with email and password
     login: async (email, password) => {
-      // Simulate API call
-      await mockDelay();
-      
-      // Mock validation
-      if (!email || !password) {
-        const error = new Error('Email and password are required');
-        error.data = { error: 'Email and password are required' };
-        throw error;
+      try {
+        const response = await axiosInstance.post('/auth/login', { email, password });
+        
+        if (response.data.token) {
+          localStorage.setItem('authToken', response.data.token);
+          
+          if (response.data.refreshToken) {
+            localStorage.setItem('refreshToken', response.data.refreshToken);
+          }
+        }
+        
+        return response.data;
+      } catch (error) {
+        throw handleApiError(error);
       }
-      
-      // For demo purposes, any valid email/password will work
-      // In a real app, you would validate credentials against a backend
-      
-      // Store token in localStorage (mock token)
-      const token = `mock_token_${Date.now()}`;
-      localStorage.setItem('authToken', token);
-      
-      return {
-        token,
-        user: mockUser
-      };
     },
     
-    // Send magic link
-    sendMagicLink: async (email) => {
-      // Simulate API call
-      await mockDelay();
-      
-      // Mock validation
-      if (!email) {
-        const error = new Error('Email is required');
-        error.data = { error: 'Email is required' };
-        throw error;
+    // Verify token validity
+    verifyToken: async () => {
+      try {
+        const response = await axiosInstance.get('/auth/verify-token');
+        return response.data;
+      } catch (error) {
+        throw handleApiError(error);
       }
-      
-      // In a real app, this would trigger sending an email with a magic link
-      return { success: true, message: 'Magic link sent' };
     },
     
-    // Logout
+    // Refresh authentication token
+    refreshToken: async () => {
+      try {
+        const refreshToken = localStorage.getItem('refreshToken');
+        if (!refreshToken) {
+          throw new Error('No refresh token available');
+        }
+        
+        const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
+          refreshToken,
+        });
+        
+        if (response.data.token) {
+          localStorage.setItem('authToken', response.data.token);
+          
+          if (response.data.refreshToken) {
+            localStorage.setItem('refreshToken', response.data.refreshToken);
+          }
+        }
+        
+        return response.data;
+      } catch (error) {
+        throw handleApiError(error);
+      }
+    },
+    
+    // Logout user
     logout: async () => {
-      // Simulate API call
-      await mockDelay(500);
-      
-      // Remove token from localStorage
       localStorage.removeItem('authToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+      
+      // Optional: call logout endpoint to invalidate tokens on server
+      try {
+        await axiosInstance.post('/auth/logout');
+      } catch (error) {
+        console.warn('Error during logout:', error);
+      }
       
       return { success: true };
     },
@@ -179,44 +167,60 @@ const api = {
     
     // Get current user
     getCurrentUser: async () => {
-      // Simulate API call
-      await mockDelay();
-      
-      // Check if token exists
-      const token = localStorage.getItem('authToken');
-      if (!token) {
-        const error = new Error('Not authenticated');
-        error.data = { error: 'Not authenticated' };
-        throw error;
+      try {
+        const response = await axiosInstance.get('/auth/me');
+        return response.data;
+      } catch (error) {
+        throw handleApiError(error);
       }
-      
-      return mockUser;
+    },
+    
+    // Send magic link
+    sendMagicLink: async (email) => {
+      try {
+        const response = await axiosInstance.post('/auth/magic-link', { email });
+        return response.data;
+      } catch (error) {
+        throw handleApiError(error);
+      }
     }
   },
   
+  // You can add other API sections like business, profile, etc.
   business: {
     // Update business profile
     updateBusinessProfile: async (profileData) => {
-      // Simulate API call
-      await mockDelay(1500);
-      
-      // Mock validation
-      if (!profileData.companyName) {
-        const error = new Error('Company name is required');
-        error.data = { error: 'Company name is required' };
-        throw error;
+      try {
+        const response = await axiosInstance.post('/business/profile', profileData);
+        return response.data;
+      } catch (error) {
+        throw handleApiError(error);
       }
-      
-      // In a real app, this would update the user's business profile
-      return {
-        success: true,
-        businessProfile: {
-          ...mockUser.businessProfile,
-          ...profileData
-        }
-      };
     }
   }
 };
+
+// Helper function to standardize error handling
+function handleApiError(error) {
+  if (error.response) {
+    // Server responded with a status code outside of 2xx range
+    return {
+      status: error.response.status,
+      data: error.response.data || { error: 'Server error' }
+    };
+  } else if (error.request) {
+    // Request was made but no response received
+    return {
+      status: 0,
+      data: { error: 'No response from server. Please check your connection.' }
+    };
+  } else {
+    // Request setup error
+    return {
+      status: 0,
+      data: { error: error.message || 'An unexpected error occurred' }
+    };
+  }
+}
 
 export default api; 

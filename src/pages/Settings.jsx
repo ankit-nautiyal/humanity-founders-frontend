@@ -29,7 +29,7 @@ export default function Settings() {
 								
 								<div className="mt-6 bg-white rounded-xl shadow-sm">
 									<div className="flex flex-col items-start self-stretch bg-[#FFFFFF] rounded-[15px]">
-										<div className="flex items-start mt-[25px] mb-[16px] ml-[25px] overflow-x-auto whitespace-nowrap gap-2 pb-2 max-w-full">
+										<div className="flex items-start mt-[25px] mb-[16px] ml-[25px] overflow-x-auto whitespace-nowrap gap-2 pb-2 max-w-full w-full pr-[25px]">
 											{menuItems.map((item) => (
 												<button 
 													key={item.id}
@@ -39,80 +39,85 @@ export default function Settings() {
 															: "bg-transparent text-[#888888]"
 													} text-left p-[10px] rounded-[4px] border-0 cursor-pointer hover:bg-[#305AFF30] mr-2`}
 													onClick={() => setActiveSection(item.id)}>
-													<span className="text-[18px] font-bold whitespace-nowrap">
+													<span className="text-[18px] max-sm:text-[16px] font-bold whitespace-nowrap">
 														{item.label}
 													</span>
 												</button>
 											))}
 										</div>
+										
 										<div className="self-stretch bg-[#AAAAAA] h-[1px] mb-[43px] ml-[25px] mr-[25px]">
 										</div>
 										
 										{activeSection === "userProfile" && (
 											<div className="self-stretch ml-[25px] mr-[25px]">
-												<div className="flex items-center self-stretch pb-[20px]">
-													<span className="flex-1 text-[#333333] text-[18px] font-bold" >
+												<div className="flex items-center self-stretch pb-[20px] flex-wrap">
+													<span className="flex-1 text-[#333333] text-[18px] max-sm:text-[16px] font-bold mb-2 sm:mb-0" >
 														{"Profile"}
 													</span>
 													<div className="flex shrink-0 items-center">
 														<img
 															src={"https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wsaq7dgVrF/qthkpu5m_expires_30_days.png"} 
-															className="w-[50px] h-[50px] mr-[15px] object-fill"
+															className="w-[50px] h-[50px] mr-[15px] object-fill max-sm:w-[40px] max-sm:h-[40px]"
 														/>
 														<img
 															src={"https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wsaq7dgVrF/yst8acvq_expires_30_days.png"} 
-															className="w-[24px] h-[24px] object-fill"
+															className="w-[24px] h-[24px] object-fill max-sm:w-[20px] max-sm:h-[20px]"
 														/>
 													</div>
 												</div>
+												
 												<div className="self-stretch bg-[#AAAAAA] h-[1px] mb-[29px]">
 												</div>
-												<div className="flex items-center self-stretch pb-[30px]">
-													<span className="flex-1 text-[#333333] text-[18px] font-bold" >
+												<div className="flex items-center self-stretch pb-[30px] flex-wrap">
+													<span className="flex-1 text-[#333333] text-[18px] max-sm:text-[16px] font-bold mb-2 sm:mb-0" >
 														{"User Name"}
 													</span>
-													<div className="flex shrink-0 items-center">
-														<span className="text-[#636363] text-[18px] mr-[19px]" >
+													<div className="flex shrink-0 items-center flex-wrap justify-end">
+														<span className="text-[#636363] text-[18px] max-sm:text-[16px] mr-[19px]" >
 															{"Kadin Stanton"}
 														</span>
 														<img
 															src={"https://storage.googleapis.com/tagjs-prod.appspot.com/v1/wsaq7dgVrF/z43szn6l_expires_30_days.png"} 
-															className="w-[24px] h-[24px] object-fill"
+															className="w-[24px] h-[24px] object-fill max-sm:w-[20px] max-sm:h-[20px]"
 														/>
 													</div>
 												</div>
+												
 												<div className="self-stretch bg-[#AAAAAA] h-[1px] mb-[29px]">
 												</div>
-												<div className="flex items-center self-stretch pb-[30px]">
-													<span className="flex-1 text-[#333333] text-[18px] font-bold" >
+												<div className="flex items-center self-stretch pb-[30px] flex-wrap">
+													<span className="flex-1 text-[#333333] text-[18px] max-sm:text-[16px] font-bold mb-2 sm:mb-0" >
 														{"User Phone"}
 													</span>
-													<span className="text-[#636363] text-[18px] mb-[1px]" >
+													<span className="text-[#636363] text-[18px] max-sm:text-[16px] mb-[1px]" >
 														{"1234567890"}
 													</span>
 												</div>
+												
 												<div className="self-stretch bg-[#AAAAAA] h-[1px] mb-[29px]">
 												</div>
-												<div className="flex items-center self-stretch pb-[30px]">
-													<span className="flex-1 text-[#333333] text-[18px] font-bold" >
+												<div className="flex items-center self-stretch pb-[30px] flex-wrap">
+													<span className="flex-1 text-[#333333] text-[18px] max-sm:text-[16px] font-bold mb-2 sm:mb-0" >
 														{"Email"}
 													</span>
-													<span className="text-[#636363] text-[18px]" >
+													<span className="text-[#636363] text-[18px] max-sm:text-[16px]" >
 														{"kadinstanton@gmail.com"}
 													</span>
 												</div>
+												
 												<div className="self-stretch bg-[#AAAAAA] h-[1px] mb-[29px]">
 												</div>
-												<div className="flex items-center self-stretch pb-[30px]">
-													<span className="flex-1 text-[#333333] text-[18px] font-bold" >
+												<div className="flex items-center self-stretch pb-[30px] flex-wrap">
+													<span className="flex-1 text-[#333333] text-[18px] max-sm:text-[16px] font-bold mb-2 sm:mb-0" >
 														{"Password"}
 													</span>
-													<div className="flex shrink-0 items-center">
-														<span className="text-[#636363] text-[18px] mr-[17px]" >
+													<div className="flex shrink-0 items-center flex-wrap justify-end gap-3">
+														<span className="text-[#636363] text-[18px] max-sm:text-[16px] mr-[17px]" >
 															{"*******"}
 														</span>
 														<button className="flex flex-col shrink-0 items-start bg-transparent text-left pt-[10px] pb-[10px] pl-[15px] pr-[15px] rounded-[5px] border-[1px] border-solid border-[#3059FE] cursor-pointer hover:bg-[#3059FE10]">
-															<span className="text-[#3059FE] text-[16px]" >
+															<span className="text-[#3059FE] text-[16px] max-sm:text-[14px]" >
 																{"Change Password"}
 															</span>
 														</button>
@@ -309,14 +314,14 @@ export default function Settings() {
 										
 										<div className="self-stretch bg-[#AAAAAA] h-[1px] mb-[54px] ml-[25px] mr-[25px]">
 										</div>
-										<div className="flex items-start self-stretch mb-[25px] ml-[346px] mr-[346px]">
-											<div className="flex flex-1 flex-col pt-[10px] pb-[10px] mr-[30px] rounded-[8px] border-[1px] border-solid border-[#FF4C51] cursor-pointer hover:bg-[#FF4C5110]">
-												<span className="text-center text-[#FF4C51] text-[18px] ml-[30px] mr-[30px]" >
+										<div className="flex items-start self-stretch mb-[25px] ml-[25px] mr-[25px] max-sm:flex-col max-sm:gap-3">
+											<div className="flex flex-1 flex-col pt-[10px] pb-[10px] mr-[30px] max-sm:mr-0 rounded-[8px] border-[1px] border-solid border-[#FF4C51] cursor-pointer hover:bg-[#FF4C5110]">
+												<span className="text-center text-[#FF4C51] text-[18px] max-sm:text-[16px] ml-[30px] mr-[30px]" >
 													{"Delete Account"}
 												</span>
 											</div>
 											<div className="flex flex-1 flex-col bg-[#FF4C51] pt-[10px] pb-[10px] rounded-[8px] border-[1px] border-solid border-[#FF4C51] cursor-pointer hover:bg-[#FF3C41]">
-												<span className="text-center text-[#FFFFFF] text-[18px] font-bold ml-[59px] mr-[59px]" >
+												<span className="text-center text-[#FFFFFF] text-[18px] max-sm:text-[16px] font-bold ml-[59px] mr-[59px]" >
 													{"Sign Out"}
 												</span>
 											</div>

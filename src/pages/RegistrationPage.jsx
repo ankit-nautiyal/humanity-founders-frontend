@@ -17,12 +17,15 @@ function RegistrationPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [role, setRole] = useState("BusinessOwner");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [nameError, setNameError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateEmail = (email) => {
@@ -71,6 +74,19 @@ function RegistrationPage() {
     return true;
   };
 
+  const validatePhone = (phone) => {
+    const phoneRegex = /^\d{10}$/;
+    if (!phone.trim()) {
+      setPhoneError("Phone number is required");
+      return false;
+    } else if (!phoneRegex.test(phone)) {
+      setPhoneError("Please enter a valid 10-digit phone number");
+      return false;
+    }
+    setPhoneError("");
+    return true;
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
     
@@ -78,13 +94,22 @@ function RegistrationPage() {
     const isPasswordValid = validatePassword(password);
     const isConfirmPasswordValid = validateConfirmPassword(confirmPassword);
     const isNameValid = validateName(name);
+    const isPhoneValid = validatePhone(phoneNumber);
     
-    if (isEmailValid && isPasswordValid && isConfirmPasswordValid && isNameValid) {
+    if (isEmailValid && isPasswordValid && isConfirmPasswordValid && isNameValid && isPhoneValid) {
       setIsSubmitting(true);
       
       try {
-        // Call the mock API for registration - fixed to match the API interface
-        const response = await api.auth.login(email, password);
+        // Call the actual registration API endpoint with all user data
+        const userData = {
+          name,
+          email,
+          password,
+          phoneNumber,
+          role
+        };
+        
+        const response = await api.auth.register(userData);
         
         // Show success message
         toast.success("Registration successful!", {
@@ -96,17 +121,14 @@ function RegistrationPage() {
           draggable: true,
         });
         
-        // Store token and user in localStorage (in a real app, use a more secure method)
-        localStorage.setItem('authToken', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
-        
         // Redirect to login page after a delay
         setTimeout(() => {
           navigate('/login');
         }, 2000);
       } catch (error) {
-        // Show error message
-        toast.error(error.data?.error || "Registration failed. Please try again.", {
+        // Show error message from API
+        const errorMessage = error.data?.error || "Registration failed. Please try again.";
+        toast.error(errorMessage, {
           position: "top-right",
           autoClose: 3000,
         });
@@ -118,7 +140,7 @@ function RegistrationPage() {
 
   return (
     <PageTransition>
-      <main className="flex min-h-screen flex-col items-center justify-center px-20 py-4 bg-slate-100 max-md:px-5 relative overflow-hidden">
+      <main className="flex min-h-screen flex-col items-center justify-center px-6 sm:px-10 md:px-20 py-4 bg-slate-100 relative overflow-hidden">
         {/* Vector SVG backgrounds */}
         <div className="absolute top-0 right-0 w-full z-0 pointer-events-none">
           <img src={VectorUp} alt="" className="w-full" />
@@ -131,13 +153,13 @@ function RegistrationPage() {
         <ChatbotButton />
 
         <ToastContainer />
-        <div className="flex flex-col max-w-full w-[650px] z-10 relative">
+        <div className="flex flex-col max-w-full w-full sm:w-[500px] md:w-[650px] z-10 relative">
           <h1 className="self-center text-xl font-semibold text-center text-neutral-600 mb-2">
             Register for ReferralHub
           </h1>
 
-          <section className="flex flex-col px-12 py-5 mt-4 bg-white rounded-2xl max-md:px-5 max-md:mt-3 max-md:max-w-full items-center justify-center shadow-[0px_10px_30px_rgba(0,0,0,0.08)]">
-            <form onSubmit={handleRegister} className="max-w-[400px] w-full">
+          <section className="flex flex-col px-4 sm:px-8 md:px-12 py-5 mt-4 bg-white rounded-2xl items-center justify-center shadow-[0px_10px_30px_rgba(0,0,0,0.08)]">
+            <form onSubmit={handleRegister} className="w-full max-w-[400px]">
               {/* Name Field */}
               <div className="flex flex-col w-full rounded-lg mb-3">
                 <label className="self-start text-sm text-zinc-800">Full Name</label>
@@ -168,6 +190,35 @@ function RegistrationPage() {
                   }}
                 />
                 {emailError && <p className="text-red-500 text-xs mt-1">{emailError}</p>}
+              </div>
+
+              {/* Phone Number Field */}
+              <div className="flex flex-col w-full rounded-lg mb-3">
+                <label className="self-start text-sm text-zinc-800">Phone Number</label>
+                <input
+                  type="tel"
+                  placeholder="Enter your phone number"
+                  className={`w-full p-2 mt-1 text-base bg-white rounded-lg border border-solid ${phoneError ? "border-red-500" : "border-stone-300"} text-zinc-800`}
+                  value={phoneNumber}
+                  onChange={(e) => {
+                    setPhoneNumber(e.target.value);
+                    if (phoneError) validatePhone(e.target.value);
+                  }}
+                />
+                {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
+              </div>
+
+              {/* Role Selection */}
+              <div className="flex flex-col w-full rounded-lg mb-3">
+                <label className="self-start text-sm text-zinc-800">Role</label>
+                <select
+                  className="w-full p-2 mt-1 text-base bg-white rounded-lg border border-solid border-stone-300 text-zinc-800"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                >
+                  <option value="BusinessOwner">Business Owner</option>
+                  <option value="Promoter">Promoter</option>
+                </select>
               </div>
 
               {/* Password Field */}
@@ -203,7 +254,7 @@ function RegistrationPage() {
               </div>
 
               {/* Confirm Password Field */}
-              <div className="flex flex-col w-full rounded-none mb-8">
+              <div className="flex flex-col w-full rounded-none mb-6">
                 <label className="self-start text-sm text-zinc-800">
                   Confirm Password
                 </label>
@@ -253,7 +304,7 @@ function RegistrationPage() {
                   <SocialLoginSection />
               </div>
 
-              <p className="self-center text-base text-center text-neutral-400">
+              <p className="self-center text-sm sm:text-base text-center text-neutral-400">
                 Already have an account?{" "}
                 <Link to="/login" className="text-[rgba(48,90,255,1)] hover:underline transition-all">
                   Login

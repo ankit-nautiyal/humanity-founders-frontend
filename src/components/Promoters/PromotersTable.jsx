@@ -1,10 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import eyeIcon from "../../assets/eye-icon.png";
 import messageIcon from "../../assets/message-up.png";
 import PromoterStatusBadge from "./PromoterStatusBadge";
 
 function PromotersTable() {
   const [selectedPromoters, setSelectedPromoters] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
   
   const promoters = [
     {
@@ -105,72 +121,166 @@ function PromotersTable() {
     }
   };
 
-  return (
-    <div className="flex flex-wrap gap-8 items-start py-5 pr-8 pl-4 mt-6 mr-8 w-full bg-white rounded-lg border border-solid border-stone-300 max-md:max-w-full">
-      <table className="w-full">
-        <thead>
-          <tr className="flex gap-8 items-center mb-6">
-            <th className="w-6">
-              <input
-                type="checkbox"
-                className="w-4 h-4 cursor-pointer"
-                checked={selectedPromoters.length === promoters.length}
-                onChange={toggleSelectAll}
-                aria-label="Select all promoters"
-              />
-            </th>
-            <th className="flex-1 text-left text-sm font-semibold text-zinc-800 w-[103px]">Promoter Name</th>
-            <th className="flex-1 text-center text-sm font-semibold text-zinc-800 w-[106px]">Contact No.</th>
-            <th className="flex-1 text-center text-sm font-semibold text-zinc-800 w-9 max-md:hidden">Leads</th>
-            <th className="flex-1 text-center text-sm font-semibold text-zinc-800 w-[107px]">Conversion Rate</th>
-            <th className="flex-1 text-center text-sm font-semibold text-zinc-800 w-[97px]">Last Follow-Up</th>
-            <th className="flex-1 text-center text-sm font-semibold text-zinc-800 w-[129px]">Revenue Generated</th>
-            <th className="flex-1 text-center text-sm font-semibold text-zinc-800 w-[98px]">Referrer Status</th>
-            <th className="flex-1 text-center text-sm font-semibold text-zinc-800 w-[70px]">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {promoters.map((promoter) => (
-            <tr key={promoter.id} className="flex gap-8 items-center mb-8">
-              <td className="w-6">
+  const handleViewPromoter = (id) => {
+    navigate(`/promoters/${id}`);
+  };
+
+  // Mobile view - Card layout
+  const renderMobileView = () => {
+    return (
+      <div className="w-full">
+        <div className="flex justify-between items-center mb-4 px-2">
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              className="w-4 h-4 cursor-pointer mr-2"
+              checked={selectedPromoters.length === promoters.length}
+              onChange={toggleSelectAll}
+              aria-label="Select all promoters"
+            />
+            <span className="text-sm font-semibold">Select All</span>
+          </div>
+          <div className="text-sm text-gray-500">
+            {selectedPromoters.length} selected
+          </div>
+        </div>
+        
+        {promoters.map((promoter) => (
+          <div key={promoter.id} className="bg-white rounded-lg p-4 mb-4 border border-gray-200 shadow-sm">
+            <div className="flex justify-between items-start mb-3">
+              <div className="flex items-center">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 cursor-pointer"
+                  className="w-4 h-4 cursor-pointer mr-2"
                   checked={selectedPromoters.includes(promoter.id)}
                   onChange={() => toggleSelectPromoter(promoter.id)}
                   aria-label={`Select ${promoter.name}`}
                 />
-              </td>
-              <td className="flex-1 text-sm text-stone-500 w-[103px]">{promoter.name}</td>
-              <td className="flex-1 text-center text-sm text-stone-500 w-[106px]">{promoter.contact}</td>
-              <td className="flex-1 text-center text-sm text-stone-500 w-9 max-md:hidden">{promoter.leads}</td>
-              <td className="flex-1 text-center text-sm text-stone-500 w-[107px]">{promoter.conversionRate}</td>
-              <td className="flex-1 text-center text-sm text-stone-500 w-[97px]">{promoter.lastFollowUp}</td>
-              <td className="flex-1 text-center text-sm text-stone-500 w-[129px]">{promoter.revenueGenerated}</td>
-              <td className="flex-1 flex justify-center text-sm w-[98px]">
-                <PromoterStatusBadge status={promoter.status} />
-              </td>
-              <td className="flex-1 flex gap-2 justify-center items-center w-[70px]">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/0f6176394f8a4b40b34a374327492484/15351fa4142869ab40f38e92908a2c28efa8aade?placeholderIfAbsent=true"
-                  className="object-contain w-5 h-5 cursor-pointer"
-                  alt="More options"
+                <div>
+                  <h3 className="font-medium text-sm">{promoter.name}</h3>
+                  <p className="text-xs text-gray-500">{promoter.contact}</p>
+                </div>
+              </div>
+              <PromoterStatusBadge status={promoter.status} />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              <div className="text-xs">
+                <span className="text-gray-500">Revenue:</span>
+                <span className="ml-1 font-medium">{promoter.revenueGenerated}</span>
+              </div>
+              <div className="text-xs">
+                <span className="text-gray-500">Leads:</span>
+                <span className="ml-1 font-medium">{promoter.leads}</span>
+              </div>
+              <div className="text-xs">
+                <span className="text-gray-500">Conv. Rate:</span>
+                <span className="ml-1 font-medium">{promoter.conversionRate}</span>
+              </div>
+              <div className="text-xs">
+                <span className="text-gray-500">Last Follow-Up:</span>
+                <span className="ml-1 font-medium">{promoter.lastFollowUp}</span>
+              </div>
+            </div>
+            
+            <div className="flex justify-end gap-3 mt-2">
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets/0f6176394f8a4b40b34a374327492484/15351fa4142869ab40f38e92908a2c28efa8aade?placeholderIfAbsent=true"
+                className="object-contain w-5 h-5 cursor-pointer"
+                alt="More options"
+              />
+              <img
+                src={eyeIcon}
+                className="object-contain w-5 h-5 cursor-pointer"
+                alt="View promoter details"
+              />
+              <img
+                src={messageIcon}
+                className="object-contain w-5 h-5 cursor-pointer"
+                alt="Message promoter"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // Desktop view - Table layout
+  const renderDesktopView = () => {
+    return (
+      <div className="w-full min-w-[640px]">
+        <table className="w-full">
+          <thead>
+            <tr className="flex gap-2 sm:gap-8 items-center mb-6">
+              <th className="w-6">
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 cursor-pointer"
+                  checked={selectedPromoters.length === promoters.length}
+                  onChange={toggleSelectAll}
+                  aria-label="Select all promoters"
                 />
-                <img
-                  src={eyeIcon}
-                  className="object-contain w-5 h-5 cursor-pointer"
-                  alt="View promoter details"
-                />
-                <img
-                  src={messageIcon}
-                  className="object-contain w-5 h-5 cursor-pointer"
-                  alt="Message promoter"
-                />
-              </td>
+              </th>
+              <th className="flex-1 text-left text-xs sm:text-sm font-semibold text-zinc-800 w-[80px] sm:w-[103px]">Promoter</th>
+              <th className="flex-1 text-center text-xs sm:text-sm font-semibold text-zinc-800 w-[80px] sm:w-[106px]">Contact</th>
+              <th className="flex-1 text-center text-xs sm:text-sm font-semibold text-zinc-800 w-9 max-sm:hidden">Leads</th>
+              <th className="flex-1 text-center text-xs sm:text-sm font-semibold text-zinc-800 w-[90px] sm:w-[107px] max-sm:hidden">Conv. Rate</th>
+              <th className="flex-1 text-center text-xs sm:text-sm font-semibold text-zinc-800 w-[80px] sm:w-[97px] max-sm:hidden">Follow-Up</th>
+              <th className="flex-1 text-center text-xs sm:text-sm font-semibold text-zinc-800 w-[80px] sm:w-[129px]">Revenue</th>
+              <th className="flex-1 text-center text-xs sm:text-sm font-semibold text-zinc-800 w-[70px] sm:w-[98px]">Status</th>
+              <th className="flex-1 text-center text-xs sm:text-sm font-semibold text-zinc-800 w-[60px] sm:w-[70px]">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {promoters.map((promoter) => (
+              <tr key={promoter.id} className="flex gap-2 sm:gap-8 items-center mb-8">
+                <td className="w-6">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 cursor-pointer"
+                    checked={selectedPromoters.includes(promoter.id)}
+                    onChange={() => toggleSelectPromoter(promoter.id)}
+                    aria-label={`Select ${promoter.name}`}
+                  />
+                </td>
+                <td className="flex-1 text-xs sm:text-sm text-stone-500 w-[80px] sm:w-[103px] truncate">{promoter.name}</td>
+                <td className="flex-1 text-center text-xs sm:text-sm text-stone-500 w-[80px] sm:w-[106px] truncate">{promoter.contact}</td>
+                <td className="flex-1 text-center text-xs sm:text-sm text-stone-500 w-9 max-sm:hidden">{promoter.leads}</td>
+                <td className="flex-1 text-center text-xs sm:text-sm text-stone-500 w-[90px] sm:w-[107px] max-sm:hidden">{promoter.conversionRate}</td>
+                <td className="flex-1 text-center text-xs sm:text-sm text-stone-500 w-[80px] sm:w-[97px] max-sm:hidden">{promoter.lastFollowUp}</td>
+                <td className="flex-1 text-center text-xs sm:text-sm text-stone-500 w-[80px] sm:w-[129px]">{promoter.revenueGenerated}</td>
+                <td className="flex-1 flex justify-center text-xs sm:text-sm w-[70px] sm:w-[98px]">
+                  <PromoterStatusBadge status={promoter.status} />
+                </td>
+                <td className="flex-1 flex gap-1 sm:gap-2 justify-center items-center w-[60px] sm:w-[70px]">
+                  <img
+                    src="https://cdn.builder.io/api/v1/image/assets/0f6176394f8a4b40b34a374327492484/15351fa4142869ab40f38e92908a2c28efa8aade?placeholderIfAbsent=true"
+                    className="object-contain w-4 sm:w-5 h-4 sm:h-5 cursor-pointer"
+                    alt="More options"
+                  />
+                  <img
+                    src={eyeIcon}
+                    className="object-contain w-4 sm:w-5 h-4 sm:h-5 cursor-pointer"
+                    alt="View promoter details"
+                  />
+                  <img
+                    src={messageIcon}
+                    className="object-contain w-4 sm:w-5 h-4 sm:h-5 cursor-pointer"
+                    alt="Message promoter"
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
+  return (
+    <div className="flex flex-wrap gap-8 items-start py-5 px-4 mt-6 sm:pr-8 w-full bg-white rounded-lg border border-solid border-stone-300 max-md:max-w-full overflow-x-auto">
+      {isMobile ? renderMobileView() : renderDesktopView()}
     </div>
   );
 }

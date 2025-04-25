@@ -49,12 +49,14 @@ function CredentialsSection({ onSuccessfulLogin }) {
       setIsSubmitting(true);
       
       try {
-        // Call the mock API for login - fixed to match the API interface
+        // Call the actual login API endpoint
         const response = await api.auth.login(email, password);
         
-        // Store token and user in localStorage (in a real app, use a more secure method)
-        localStorage.setItem('authToken', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
+        // Check if we have a user in the response
+        if (response.user) {
+          // Store user data
+          localStorage.setItem('user', JSON.stringify(response.user));
+        }
         
         // If onSuccessfulLogin prop exists, use it for redirection
         if (onSuccessfulLogin) {
@@ -71,8 +73,9 @@ function CredentialsSection({ onSuccessfulLogin }) {
           });
         }
       } catch (error) {
-        // Show error message
-        toast.error(error.data?.error || "Login failed. Please check your credentials.", {
+        // Show error message from API
+        const errorMessage = error.data?.error || "Login failed. Please check your credentials.";
+        toast.error(errorMessage, {
           position: "top-right",
           autoClose: 3000,
         });
@@ -83,7 +86,7 @@ function CredentialsSection({ onSuccessfulLogin }) {
   };
 
   return (
-    <div className="mt-3 max-w-[400px] w-full">
+    <div className="mt-3 w-full max-w-[400px]">
       <form onSubmit={handleLogin} className="w-full">
         <div className="w-full">
           <div className="flex flex-col w-full whitespace-nowrap rounded-lg">
@@ -132,13 +135,13 @@ function CredentialsSection({ onSuccessfulLogin }) {
             {passwordError && <p className="text-red-500 text-xs mt-1">{passwordError}</p>}
           </div>
 
-          <div className="flex justify-between items-baseline mt-2 w-full text-sm">
+          <div className="flex flex-wrap justify-between items-baseline mt-2 w-full text-sm gap-y-2">
             <label className="flex gap-2 text-neutral-600 cursor-pointer items-baseline">
               <input type="checkbox" className="w-3 h-3 bo accent-blue-600 rounded-2xl" />
-              <span className="basis-auto">Remember Me</span>
+              <span className="basis-auto text-sm">Remember Me</span>
             </label>
 
-            <a href="#" className="text-blue-600">Forgot password?</a>
+            <a href="#" className="text-blue-600 text-sm">Forgot password?</a>
           </div>
         </div>
 
