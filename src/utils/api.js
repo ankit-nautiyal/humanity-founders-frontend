@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-// API Base URL - actual API endpoint
-const API_BASE_URL = 'http://34.10.166.233';
+// Use relative API URL to make requests through our proxy serverless function
+// This will use the current host with /api/proxy/ prefix
+const API_BASE_URL = '/api/proxy';
 
 // Create axios instance with common configuration
 const axiosInstance = axios.create({
