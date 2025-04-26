@@ -4,10 +4,10 @@ import { Navigate, useLocation } from 'react-router-dom';
 function ProtectedRoute({ children }) {
   const location = useLocation();
   
-  // Check if user is logged in by looking for user data in localStorage
+  // Check if user is logged in by looking for auth token in localStorage
   const isAuthenticated = () => {
-    const user = localStorage.getItem('user');
-    return !!user; // Returns true if user exists in localStorage
+    const authToken = localStorage.getItem('authToken');
+    return !!authToken; // Returns true if token exists in localStorage
   };
 
   // If not authenticated, redirect to login page with the return url

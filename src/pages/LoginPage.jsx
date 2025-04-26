@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import VectorDown from "../assets/Vector-down.svg";
 import VectorUp from "../assets/Vector-up.svg";
 import CredentialsSection from "../components/CredentialsSection";
@@ -18,9 +16,6 @@ function LoginPage() {
 
   // Reset login toast flag and redirect to appropriate page
   const handleSuccessfulLogin = () => {
-    // Reset the login toast flag so it will show again after this login
-    localStorage.removeItem('loginToastShown');
-    
     // Redirect to the intended page or platform setup
     navigate(from);
   };
@@ -36,7 +31,6 @@ function LoginPage() {
           <img src={VectorDown} alt="" className="w-full" />
         </div>
 
-        <ToastContainer />
         <div className="flex flex-col max-w-full w-full sm:w-[500px] md:w-[650px] z-10 relative">
           <h1 className="self-center text-xl font-semibold text-center text-neutral-600 mb-2">
             Login to ReferralHub
@@ -53,7 +47,7 @@ function LoginPage() {
               <MagicLinkSection />
             </div>
 
-            <CredentialsSection onSuccessfulLogin={handleSuccessfulLogin} />
+            <CredentialsSection  />
 
             <p className="self-center mt-4 text-sm sm:text-base text-neutral-400">
               Don't have an account?{" "}

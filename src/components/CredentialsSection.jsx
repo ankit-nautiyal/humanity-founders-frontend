@@ -1,68 +1,82 @@
 "use client";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../utils/api";
 import Divider from "./Divider";
 import SocialLoginSection from "./SocialLoginSection";
 
-function CredentialsSection({ onSuccessfulLogin }) {
+function CredentialsSection() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
+  const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email.trim()) {
-      setEmailError("Email is required");
-      return false;
-    } else if (!emailRegex.test(email)) {
-      setEmailError("Please enter a valid email address");
-      return false;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+
+    // Clear error when field is changed
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: ""
+      });
     }
-    setEmailError("");
-    return true;
   };
 
-  const validatePassword = (password) => {
-    if (!password.trim()) {
-      setPasswordError("Password is required");
-      return false;
-    } else if (password.length < 6) {
-      setPasswordError("Password must be at least 6 characters");
-      return false;
+  const validateForm = () => {
+    let tempErrors = {};
+    let isValid = true;
+
+    // Email validation
+    if (!formData.email.trim()) {
+      tempErrors.email = "Email is required";
+      isValid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      tempErrors.email = "Please enter a valid email address";
+      isValid = false;
     }
-    setPasswordError("");
-    return true;
+
+    // Password validation
+    if (!formData.password.trim()) {
+      tempErrors.password = "Password is required";
+      isValid = false;
+    }
+
+    setErrors(tempErrors);
+    return isValid;
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     
-    const isEmailValid = validateEmail(email);
-    const isPasswordValid = validatePassword(password);
-    
-    if (isEmailValid && isPasswordValid) {
+    if (validateForm()) {
       setIsSubmitting(true);
       
       try {
         // Call the actual login API endpoint
-        const response = await api.auth.login(email, password);
+        const response = await api.auth.login(formData.email, formData.password);
         
         // Check if we have a user in the response
         if (response.user) {
           // Store user data
           localStorage.setItem('user', JSON.stringify(response.user));
         }
+
+        // First navigate to platform setup
+        navigate('/platform-setup');
         
-        // If onSuccessfulLogin prop exists, use it for redirection
-        if (onSuccessfulLogin) {
-          onSuccessfulLogin();
-        } else {
-          // Fallback to regular toast if no redirect function provided
+        // Then show toast after navigation
+        setTimeout(() => {
           toast.success("Logged in successfully!", {
             position: "top-right",
             autoClose: 2000,
@@ -70,14 +84,17 @@ function CredentialsSection({ onSuccessfulLogin }) {
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
+            // theme: "colored"
           });
-        }
+        }, 100); // Small delay to ensure navigation completes first
+        
       } catch (error) {
         // Show error message from API
         const errorMessage = error.data?.error || "Login failed. Please check your credentials.";
         toast.error(errorMessage, {
           position: "top-right",
           autoClose: 3000,
+          theme: "colored"
         });
       } finally {
         setIsSubmitting(false);
@@ -93,31 +110,27 @@ function CredentialsSection({ onSuccessfulLogin }) {
             <label className="self-start text-sm text-zinc-800">Email</label>
             <input
               type="email"
+              name="email"
               placeholder="robert.fox@myemail.com"
-              className={`w-full p-2 mt-1 text-base bg-white rounded-lg border border-solid ${emailError ? "border-red-500" : "border-stone-300"} text-zinc-800`}
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (emailError) validateEmail(e.target.value);
-              }}
+              className={`w-full p-2 mt-1 text-base bg-white rounded-lg border border-solid ${errors.email ? "border-red-500" : "border-stone-300"} text-zinc-800`}
+              value={formData.email}
+              onChange={handleChange}
             />
-            {emailError && <p className="text-red-500 text-xs mt-1">{emailError}</p>}
+            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
           </div>
 
           <div className="flex flex-col mt-2 w-full rounded-none">
             <label className="self-start text-sm text-zinc-800">
               Password
             </label>
-            <div className={`flex w-full justify-between px-3 py-2 mt-1 text-base bg-white rounded-lg border border-solid ${passwordError ? "border-red-500" : "border-stone-300"} text-zinc-800`}>
+            <div className={`flex w-full justify-between px-3 py-2 mt-1 text-base bg-white rounded-lg border border-solid ${errors.password ? "border-red-500" : "border-stone-300"} text-zinc-800`}>
               <input
                 type={showPassword ? "text" : "password"}
+                name="password"
                 placeholder="Enter password"
                 className="my-auto bg-transparent border-none outline-none w-full text-zinc-800"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (passwordError) validatePassword(e.target.value);
-                }}
+                value={formData.password}
+                onChange={handleChange}
               />
               <button type="button" onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? (
@@ -132,7 +145,7 @@ function CredentialsSection({ onSuccessfulLogin }) {
                 )}
               </button>
             </div>
-            {passwordError && <p className="text-red-500 text-xs mt-1">{passwordError}</p>}
+            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
           </div>
 
           <div className="flex flex-wrap justify-between items-baseline mt-2 w-full text-sm gap-y-2">

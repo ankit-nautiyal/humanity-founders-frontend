@@ -32,6 +32,10 @@ function Campaign() {
     }
   ];
 
+  // Calculate stats for CampaignStats component
+  const campaignCount = campaigns.length;
+  const activeCount = campaigns.filter(campaign => campaign.isActive).length;
+
   return (
     <PageTransition>
       <div className="flex flex-col min-h-screen bg-slate-100">
@@ -49,7 +53,7 @@ function Campaign() {
                 
                 <div className="mt-4 bg-white p-6 max-sm:p-4 rounded-xl shadow-sm">
                   <CampaignHeader />
-                  <CampaignStats />
+                  <CampaignStats campaignCount={campaignCount} activeCount={activeCount} />
                   
                   <div className="mt-6 grid gap-6 max-md:grid-cols-1">
                     {campaigns.map((campaign, index) => (

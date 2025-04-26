@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import VectorDown from "../assets/Vector-down.svg";
 import VectorUp from "../assets/Vector-up.svg";
@@ -13,102 +13,103 @@ import api from "../utils/api";
 
 function RegistrationPage() {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [role, setRole] = useState("BusinessOwner");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    full_name: "",
+    phone: "",
+    role: "BusinessOwner"
+  });
+  const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [phoneError, setPhoneError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email.trim()) {
-      setEmailError("Email is required");
-      return false;
-    } else if (!emailRegex.test(email)) {
-      setEmailError("Please enter a valid email address");
-      return false;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+
+    // Clear error when field is changed
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: ""
+      });
     }
-    setEmailError("");
-    return true;
   };
 
-  const validatePassword = (password) => {
-    if (!password.trim()) {
-      setPasswordError("Password is required");
-      return false;
-    } else if (password.length < 6) {
-      setPasswordError("Password must be at least 6 characters");
-      return false;
-    }
-    setPasswordError("");
-    return true;
-  };
+  const validateForm = () => {
+    let tempErrors = {};
+    let isValid = true;
 
-  const validateConfirmPassword = (confirmPassword) => {
-    if (!confirmPassword.trim()) {
-      setConfirmPasswordError("Please confirm your password");
-      return false;
-    } else if (confirmPassword !== password) {
-      setConfirmPasswordError("Passwords do not match");
-      return false;
+    // Email validation
+    if (!formData.email.trim()) {
+      tempErrors.email = "Email is required";
+      isValid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      tempErrors.email = "Please enter a valid email address";
+      isValid = false;
     }
-    setConfirmPasswordError("");
-    return true;
-  };
 
-  const validateName = (name) => {
-    if (!name.trim()) {
-      setNameError("Name is required");
-      return false;
+    // Password validation
+    if (!formData.password.trim()) {
+      tempErrors.password = "Password is required";
+      isValid = false;
+    } else if (formData.password.length < 1) {
+      tempErrors.password = "Password must not be empty";
+      isValid = false;
     }
-    setNameError("");
-    return true;
-  };
 
-  const validatePhone = (phone) => {
-    const phoneRegex = /^\d{10}$/;
-    if (!phone.trim()) {
-      setPhoneError("Phone number is required");
-      return false;
-    } else if (!phoneRegex.test(phone)) {
-      setPhoneError("Please enter a valid 10-digit phone number");
-      return false;
+    // Confirm password validation
+    if (formData.password !== formData.confirmPassword) {
+      tempErrors.confirmPassword = "Passwords do not match";
+      isValid = false;
     }
-    setPhoneError("");
-    return true;
+
+    // Full name validation
+    if (!formData.full_name.trim()) {
+      tempErrors.full_name = "Full name is required";
+      isValid = false;
+    } else if (formData.full_name.length > 255) {
+      tempErrors.full_name = "Full name must be less than 255 characters";
+      isValid = false;
+    }
+
+    // Phone validation (optional field)
+    if (formData.phone && formData.phone.length > 15) {
+      tempErrors.phone = "Phone number must be less than 15 characters";
+      isValid = false;
+    }
+
+    setErrors(tempErrors);
+    return isValid;
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
     
-    const isEmailValid = validateEmail(email);
-    const isPasswordValid = validatePassword(password);
-    const isConfirmPasswordValid = validateConfirmPassword(confirmPassword);
-    const isNameValid = validateName(name);
-    const isPhoneValid = validatePhone(phoneNumber);
-    
-    if (isEmailValid && isPasswordValid && isConfirmPasswordValid && isNameValid && isPhoneValid) {
+    if (validateForm()) {
       setIsSubmitting(true);
       
       try {
-        // Call the actual registration API endpoint with all user data
+        // Prepare data for API
         const userData = {
-          name,
-          email,
-          password,
-          phoneNumber,
-          role
+          email: formData.email,
+          password: formData.password,
+          full_name: formData.full_name,
+          role: formData.role
         };
         
+        // Only include phone if not empty
+        if (formData.phone && formData.phone.trim() !== "") {
+          userData.phone = formData.phone;
+        }
+        
+        // Call the actual registration API endpoint
         const response = await api.auth.register(userData);
         
         // Show success message
@@ -126,8 +127,50 @@ function RegistrationPage() {
           navigate('/login');
         }, 2000);
       } catch (error) {
-        // Show error message from API
-        const errorMessage = error.data?.error || "Registration failed. Please try again.";
+        console.error('Registration error in component:', error);
+        
+        // Check for structured validation errors
+        let errorMessage = "Registration failed. Please try again.";
+        
+        if (error.data) {
+          // Handle FastAPI validation errors format
+          if (error.data.detail && Array.isArray(error.data.detail)) {
+            const fieldErrors = {};
+            error.data.detail.forEach(item => {
+              if (item.loc && item.loc.length > 1) {
+                const fieldName = item.loc[1];
+                fieldErrors[fieldName] = item.msg;
+              }
+            });
+            
+            if (Object.keys(fieldErrors).length > 0) {
+              setErrors(fieldErrors);
+              errorMessage = "Please fix the highlighted fields";
+            }
+          } 
+          // Handle Django REST framework error format
+          else if (typeof error.data === 'object') {
+            const fieldErrors = {};
+            
+            Object.keys(error.data).forEach(key => {
+              if (Array.isArray(error.data[key])) {
+                fieldErrors[key] = error.data[key][0];
+              } else if (typeof error.data[key] === 'string') {
+                fieldErrors[key] = error.data[key];
+              }
+            });
+            
+            if (Object.keys(fieldErrors).length > 0) {
+              setErrors(fieldErrors);
+              errorMessage = "Please fix the highlighted fields";
+            } else if (error.data.detail) {
+              errorMessage = error.data.detail;
+            } else if (error.data.error) {
+              errorMessage = error.data.error;
+            }
+          }
+        }
+        
         toast.error(errorMessage, {
           position: "top-right",
           autoClose: 3000,
@@ -152,28 +195,25 @@ function RegistrationPage() {
         {/* Chatbot Button */}
         <ChatbotButton />
 
-        <ToastContainer />
         <div className="flex flex-col max-w-full w-full sm:w-[500px] md:w-[650px] z-10 relative">
           <h1 className="self-center text-xl font-semibold text-center text-neutral-600 mb-2">
-            Register for ReferralHub
+            Create a New Account
           </h1>
 
           <section className="flex flex-col px-4 sm:px-8 md:px-12 py-5 mt-4 bg-white rounded-2xl items-center justify-center shadow-[0px_10px_30px_rgba(0,0,0,0.08)]">
             <form onSubmit={handleRegister} className="w-full max-w-[400px]">
-              {/* Name Field */}
+              {/* Full Name Field */}
               <div className="flex flex-col w-full rounded-lg mb-3">
                 <label className="self-start text-sm text-zinc-800">Full Name</label>
                 <input
                   type="text"
-                  placeholder="Enter your name"
-                  className={`w-full p-2 mt-1 text-base bg-white rounded-lg border border-solid ${nameError ? "border-red-500" : "border-stone-300"} text-zinc-800`}
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                    if (nameError) validateName(e.target.value);
-                  }}
+                  name="full_name"
+                  placeholder="Enter your full name"
+                  className={`w-full p-2 mt-1 text-base bg-white rounded-lg border border-solid ${errors.full_name ? "border-red-500" : "border-stone-300"} text-zinc-800`}
+                  value={formData.full_name}
+                  onChange={handleChange}
                 />
-                {nameError && <p className="text-red-500 text-xs mt-1">{nameError}</p>}
+                {errors.full_name && <p className="text-red-500 text-xs mt-1">{errors.full_name}</p>}
               </div>
               
               {/* Email Field */}
@@ -181,40 +221,37 @@ function RegistrationPage() {
                 <label className="self-start text-sm text-zinc-800">Email</label>
                 <input
                   type="email"
+                  name="email"
                   placeholder="robert.fox@myemail.com"
-                  className={`w-full p-2 mt-1 text-base bg-white rounded-lg border border-solid ${emailError ? "border-red-500" : "border-stone-300"} text-zinc-800`}
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (emailError) validateEmail(e.target.value);
-                  }}
+                  className={`w-full p-2 mt-1 text-base bg-white rounded-lg border border-solid ${errors.email ? "border-red-500" : "border-stone-300"} text-zinc-800`}
+                  value={formData.email}
+                  onChange={handleChange}
                 />
-                {emailError && <p className="text-red-500 text-xs mt-1">{emailError}</p>}
+                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
               </div>
 
               {/* Phone Number Field */}
               <div className="flex flex-col w-full rounded-lg mb-3">
-                <label className="self-start text-sm text-zinc-800">Phone Number</label>
+                <label className="self-start text-sm text-zinc-800">Phone Number (Optional)</label>
                 <input
                   type="tel"
+                  name="phone"
                   placeholder="Enter your phone number"
-                  className={`w-full p-2 mt-1 text-base bg-white rounded-lg border border-solid ${phoneError ? "border-red-500" : "border-stone-300"} text-zinc-800`}
-                  value={phoneNumber}
-                  onChange={(e) => {
-                    setPhoneNumber(e.target.value);
-                    if (phoneError) validatePhone(e.target.value);
-                  }}
+                  className={`w-full p-2 mt-1 text-base bg-white rounded-lg border border-solid ${errors.phone ? "border-red-500" : "border-stone-300"} text-zinc-800`}
+                  value={formData.phone}
+                  onChange={handleChange}
                 />
-                {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
+                {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
               </div>
 
               {/* Role Selection */}
               <div className="flex flex-col w-full rounded-lg mb-3">
                 <label className="self-start text-sm text-zinc-800">Role</label>
                 <select
+                  name="role"
                   className="w-full p-2 mt-1 text-base bg-white rounded-lg border border-solid border-stone-300 text-zinc-800"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
+                  value={formData.role}
+                  onChange={handleChange}
                 >
                   <option value="BusinessOwner">Business Owner</option>
                   <option value="Promoter">Promoter</option>
@@ -226,16 +263,14 @@ function RegistrationPage() {
                 <label className="self-start text-sm text-zinc-800">
                   Password
                 </label>
-                <div className={`flex w-full justify-between px-3 py-2 mt-1 text-base bg-white rounded-lg border border-solid ${passwordError ? "border-red-500" : "border-stone-300"} text-zinc-800`}>
+                <div className={`flex w-full justify-between px-3 py-2 mt-1 text-base bg-white rounded-lg border border-solid ${errors.password ? "border-red-500" : "border-stone-300"} text-zinc-800`}>
                   <input
                     type={showPassword ? "text" : "password"}
+                    name="password"
                     placeholder="Enter password"
                     className="my-auto bg-transparent border-none outline-none w-full text-zinc-800"
-                    value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                      if (passwordError) validatePassword(e.target.value);
-                    }}
+                    value={formData.password}
+                    onChange={handleChange}
                   />
                   <button type="button" onClick={() => setShowPassword(!showPassword)}>
                     {showPassword ? (
@@ -250,7 +285,7 @@ function RegistrationPage() {
                     )}
                   </button>
                 </div>
-                {passwordError && <p className="text-red-500 text-xs mt-1">{passwordError}</p>}
+                {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
               </div>
 
               {/* Confirm Password Field */}
@@ -259,16 +294,14 @@ function RegistrationPage() {
                   Confirm Password
                 </label>
 
-                <div className={`flex w-full justify-between px-3 py-2 mt-1 text-base bg-white rounded-lg border border-solid ${confirmPasswordError ? "border-red-500" : "border-stone-300"} text-zinc-800`}>
+                <div className={`flex w-full justify-between px-3 py-2 mt-1 text-base bg-white rounded-lg border border-solid ${errors.confirmPassword ? "border-red-500" : "border-stone-300"} text-zinc-800`}>
                   <input
                     type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
                     placeholder="Re-enter password"
                     className="my-auto bg-transparent border-none outline-none w-full text-zinc-800"
-                    value={confirmPassword}
-                    onChange={(e) => {
-                      setConfirmPassword(e.target.value);
-                      if (confirmPasswordError) validateConfirmPassword(e.target.value);
-                    }}
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
                   />
                   <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                     {showConfirmPassword ? (
@@ -283,7 +316,7 @@ function RegistrationPage() {
                     )}
                   </button>
                 </div>
-                {confirmPasswordError && <p className="text-red-500 text-xs mt-1">{confirmPasswordError}</p>}
+                {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
               </div>
 
               {/* Register Button */}

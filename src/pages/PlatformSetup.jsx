@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BusinessProfileForm from "../components/BusinessProfileForm";
 import PageTransition from "../components/PageTransition";
@@ -10,29 +10,15 @@ import Sidebar from "../components/Sidebar";
 
 function PlatformSetup() {
   useEffect(() => {
-    // Check if login toast has already been shown
-    const hasShownLoginToast = localStorage.getItem('loginToastShown');
-    
-    // Only show the toast if it hasn't been shown yet
-    if (!hasShownLoginToast) {
-      toast.success("Login successful!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
-      
+ 
       // Set flag in localStorage to prevent showing it again
       localStorage.setItem('loginToastShown', 'true');
-    }
+    
   }, []);
 
   return (
     <PageTransition>
       <div className="flex flex-col min-h-screen bg-slate-100">
-        <ToastContainer />
         <main className="flex flex-1 bg-slate-100">
           <div className="flex w-full gap-5 p-4 max-md:flex-col min-h-screen">
             <aside className="w-[17%] max-md:w-full h-full">

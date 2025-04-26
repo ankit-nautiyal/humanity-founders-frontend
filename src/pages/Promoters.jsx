@@ -3,8 +3,8 @@ import PageTransition from "../components/PageTransition";
 import ProfileHeader from "../components/ProfileHeader";
 import PromotersTable from "../components/Promoters/PromotersTable";
 import SearchFilter from "../components/Promoters/SearchFilter";
-import Sidebar from "../components/Sidebar";
 import StatisticsCard from "../components/Promoters/StatisticsCard";
+import Sidebar from "../components/Sidebar";
 
 export default function Promoters() {
   return (
@@ -18,26 +18,23 @@ export default function Promoters() {
             <StatisticsCard
               title="Total Promoters"
               value="128"
-              change="+12%"
-              positive={true}
-              time="from last month"
-              icon="https://cdn.builder.io/api/v1/image/assets/0f6176394f8a4b40b34a374327492484/b4c5dd4ab9acf93e2c32d8e3ba5eb26a2eb76aad?placeholderIfAbsent=true"
+              changePercentage="+12%"
+              isPositive={true}
+              iconSrc="https://cdn-icons-png.flaticon.com/512/681/681494.png"
             />
             <StatisticsCard
               title="Active Promoters"
               value="48"
-              change="+8%"
-              positive={true}
-              time="from last month"
-              icon="https://cdn.builder.io/api/v1/image/assets/0f6176394f8a4b40b34a374327492484/5dca8294c8b96a6be79fa45713722ace1d0eed38?placeholderIfAbsent=true"
+              changePercentage="+8%"
+              isPositive={true}
+              iconSrc="https://cdn-icons-png.flaticon.com/512/3126/3126647.png"
             />
             <StatisticsCard
               title="View Rate"
               value="78.5%"
-              change="-5%"
-              positive={false}
-              time="from last month"
-              icon="https://cdn.builder.io/api/v1/image/assets/0f6176394f8a4b40b34a374327492484/1a1874c39a2f3e3e93da3455f2bcbc6d76e05bdc?placeholderIfAbsent=true"
+              changePercentage="-5%"
+              isPositive={false}
+              iconSrc="https://cdn-icons-png.flaticon.com/512/709/709612.png"
             />
           </div>
           

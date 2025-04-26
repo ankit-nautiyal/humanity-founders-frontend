@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CiSearch } from 'react-icons/ci';
 import { HiBell } from 'react-icons/hi';
-import { RiArrowDownSLine } from 'react-icons/ri';
-import { useLocation } from "react-router-dom";
+import { RiArrowDownSLine, RiLogoutBoxLine, RiUserSettingsLine } from 'react-icons/ri';
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 import Avatar from './Avatar';
 
-function ProfileHeader({ avatar = '/avatars/avatar-1.png', name = 'John Doe', email = 'john@example.com', username = 'johndoe', title }) {
+function ProfileHeader({ avatar = '/assets/profilePic.png', name = 'Kadin Stanton', email = 'kadinstanton@gmail.com', title }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const path = location.pathname;
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   // Function to get the page title based on the current route
   const getPageTitle = () => {
@@ -16,14 +20,14 @@ function ProfileHeader({ avatar = '/avatars/avatar-1.png', name = 'John Doe', em
 
     // Otherwise, determine title from the path
     switch (true) {
+      case path === '/platform-setup':
+        return 'Platform Setup';
       case path === '/dashboard':
         return 'Dashboard';
       case path === '/campaign':
         return 'Campaign';
       case path === '/promoters':
         return 'Promoters';
-      case path.startsWith('/promoters/'):
-        return 'Promoter Details';
       case path === '/leads':
         return 'Leads';
       case path === '/payouts':
@@ -47,6 +51,50 @@ function ProfileHeader({ avatar = '/avatars/avatar-1.png', name = 'John Doe', em
         return fullTitle;
     }
   };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    // Close dropdown
+    setIsDropdownOpen(false);
+    
+    // Remove auth tokens from localStorage
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.setItem('loginToastShown', 'false');
+    
+    // First navigate to login
+    navigate('/login');
+
+    // Then show toast after navigation
+    setTimeout(() => {
+      toast.success('Logged out successfully', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        // theme: "colored"
+      });
+    }, 100); // Small delay to ensure navigation completes first
+  };
+
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-5 md:px-8 py-4 md:py-5 bg-white">
@@ -72,13 +120,34 @@ function ProfileHeader({ avatar = '/avatars/avatar-1.png', name = 'John Doe', em
           </button>
         </div>
         
-        <div className="flex items-center gap-2">
-          <Avatar src={avatar} size="sm" />
-          <div className="hidden md:block">
-            <p className="text-sm font-medium text-zinc-800">{name}</p>
-            <p className="text-xs text-gray-500">@{username}</p>
+        <div className="relative" ref={dropdownRef}>
+          <div 
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={toggleDropdown}
+          >
+            <Avatar src={avatar} size="sm" />
+            <div className="hidden md:block">
+              <p className="text-sm font-medium text-zinc-800">{name}</p>
+              <p className="text-xs text-gray-500">{email}</p>
+            </div>
+            <RiArrowDownSLine className={`text-gray-500 ${isDropdownOpen ? 'rotate-180' : ''} transition-transform duration-200`} />
           </div>
-          <RiArrowDownSLine className="text-gray-500 hidden md:block" />
+          
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-200">
+              <a href="/settings" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <RiUserSettingsLine className="mr-2 text-gray-500" />
+                Profile Settings
+              </a>
+              <button 
+                onClick={handleLogout} 
+                className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+              >
+                <RiLogoutBoxLine className="mr-2" />
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

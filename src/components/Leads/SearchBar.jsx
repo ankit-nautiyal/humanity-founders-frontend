@@ -2,7 +2,7 @@ import React from "react";
 
 function SearchBar() {
   return (
-    <div className="flex items-center rounded bg-neutral-100 min-w-60 w-[307px]">
+    <div className="flex items-center rounded bg-neutral-100 w-full max-w-[307px]">
       <div className="flex items-center px-3 py-2 w-full">
         <img
           src="https://cdn.builder.io/api/v1/image/assets/0f6176394f8a4b40b34a374327492484/3182b83634c8c74deb0cb38c2694e5cca0f89fee?placeholderIfAbsent=true"

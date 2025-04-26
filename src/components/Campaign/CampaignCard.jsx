@@ -1,16 +1,13 @@
 import React from "react";
-import AiRecommendation from "./AiRecommendation";
 
-function CampaignCard({ campaign }) {
-  const { title, dateRange, isActive, metrics, recommendation } = campaign;
-
+function CampaignCard({ title, description, reward, isActive, lastUpdated }) {
   return (
     <article className="p-5 mx-auto w-full rounded-2xl bg-zinc-50 max-md:mt-6">
       <header className="flex gap-8 items-start pb-5 w-full border-b border-zinc-300">
         <div className="min-w-60 w-[251px]">
           <h2 className="text-lg font-semibold text-zinc-800">{title}</h2>
           <time className="mt-3 text-base font-medium text-zinc-500">
-            {dateRange}
+            {lastUpdated}
           </time>
         </div>
         <span
@@ -25,28 +22,18 @@ function CampaignCard({ campaign }) {
         </span>
       </header>
 
-      <div className="flex gap-10 items-center mt-8 whitespace-nowrap">
-        <div className="flex flex-col items-center self-stretch my-auto">
-          <p className="text-base font-medium text-zinc-500">Referrals</p>
-          <p className="mt-1.5 text-2xl font-semibold text-center text-zinc-800">
-            {metrics.referrals}
-          </p>
-        </div>
-        <div className="flex flex-col items-center self-stretch my-auto">
-          <p className="text-base font-medium text-zinc-500">Conversion</p>
-          <p className="mt-1.5 text-2xl font-semibold text-center text-zinc-800">
-            {metrics.conversion}
-          </p>
-        </div>
-        <div className="flex flex-col self-stretch my-auto w-[60px]">
-          <p className="text-base font-medium text-center text-zinc-500">ROI</p>
-          <p className="self-center mt-1.5 text-2xl font-semibold text-zinc-800">
-            {metrics.roi}
+      <div className="mt-4">
+        <p className="text-base text-zinc-700">{description}</p>
+      </div>
+
+      <div className="mt-6">
+        <div className="flex flex-col">
+          <p className="text-base font-medium text-zinc-500">Reward</p>
+          <p className="mt-1.5 text-xl font-semibold text-zinc-800">
+            ${reward}
           </p>
         </div>
       </div>
-
-      <AiRecommendation text={recommendation} />
 
       <div className="flex gap-10 justify-between items-start mt-8 w-full max-w-[343px]">
         <button className="flex gap-6 items-center w-6">

@@ -1,6 +1,8 @@
 import { AnimatePresence } from 'framer-motion';
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import ProtectedRoute from './components/ProtectedRoute';
 import AI_Agent from './pages/AI_Agent.jsx';
 import Campaign from './pages/Campaign.jsx';
@@ -73,6 +75,19 @@ const AnimatedRoutes = () => {
 function App() {
   return (
     <Router>
+      <ToastContainer 
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        // theme="colored"
+        toastClassName="text-base"
+      />
       <AnimatedRoutes />
     </Router>
   );
