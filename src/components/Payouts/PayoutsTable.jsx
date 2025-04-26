@@ -129,7 +129,7 @@ function PayoutsTable() {
               </button>
               <img
                 src={eyeIcon}
-                className="object-contain w-5 h-5 cursor-pointer"
+                className="object-contain w-5 h-5 cursor-default"
                 alt="View details"
               />
             </div>

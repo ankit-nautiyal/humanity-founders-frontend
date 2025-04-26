@@ -315,13 +315,13 @@ export default function Settings() {
 										<div className="self-stretch bg-[#AAAAAA] h-[1px] mb-[54px] ml-[25px] mr-[25px]">
 										</div>
 										<div className="flex items-start self-stretch mb-[25px] ml-[25px] mr-[25px] max-sm:flex-col max-sm:gap-3">
-											<div className="flex flex-1 flex-col pt-[10px] pb-[10px] mr-[30px] max-sm:mr-0 rounded-[8px] border-[1px] border-solid border-[#FF4C51] cursor-pointer hover:bg-[#FF4C5110]">
-												<span className="text-center text-[#FF4C51] text-[18px] max-sm:text-[16px] ml-[30px] mr-[30px]" >
+											<div className="flex flex-1 flex-col pt-[6px] pb-[6px] mr-[30px] max-sm:mr-0 rounded-[8px] border-[1px] border-solid border-[#FF4C51] cursor-pointer hover:bg-[#FF4C5110]">
+												<span className="text-center text-[#FF4C51] text-[16px] max-sm:text-[14px] ml-[20px] mr-[20px]" >
 													{"Delete Account"}
 												</span>
 											</div>
-											<div className="flex flex-1 flex-col bg-[#FF4C51] pt-[10px] pb-[10px] rounded-[8px] border-[1px] border-solid border-[#FF4C51] cursor-pointer hover:bg-[#FF3C41]">
-												<span className="text-center text-[#FFFFFF] text-[18px] max-sm:text-[16px] font-bold ml-[59px] mr-[59px]" >
+											<div className="flex flex-1 flex-col bg-[#FF4C51] pt-[6px] pb-[6px] rounded-[8px] border-[1px] border-solid border-[#FF4C51] cursor-pointer hover:bg-[#FF3C41]">
+												<span className="text-center text-[#FFFFFF] text-[16px] max-sm:text-[14px] font-bold ml-[30px] mr-[30px]" >
 													{"Sign Out"}
 												</span>
 											</div>

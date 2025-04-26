@@ -191,9 +191,8 @@ function PromotersTable() {
               />
               <img
                 src={eyeIcon}
-                className="object-contain w-5 h-5 cursor-pointer"
+                className="object-contain w-5 h-5 cursor-default"
                 alt="View promoter details"
-                onClick={() => handleViewPromoter(promoter.id)}
               />
               <img
                 src={messageIcon}
@@ -257,9 +256,8 @@ function PromotersTable() {
                 <td className="flex-1 flex gap-1 sm:gap-2 justify-center items-center w-[60px] sm:w-[70px]">
                   <img
                     src={eyeIcon}
-                    className="object-contain w-4 sm:w-5 h-4 sm:h-5 cursor-pointer"
+                    className="object-contain w-4 sm:w-5 h-4 sm:h-5 cursor-default"
                     alt="View promoter details"
-                    onClick={() => handleViewPromoter(promoter.id)}
                   />
                   <img
                     src={messageIcon}
